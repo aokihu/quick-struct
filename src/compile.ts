@@ -54,8 +54,13 @@ export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
         _name = _name === '' ? 'default' : _name
         structs.push([_name, _body])
     }
-    
-    return structs.length === 0 ? null : structs.length > 1 ? structs : structs[0]
+    return structs;
+}
+
+
+export const parseBody = (body: string) => {
+    const regexp = /^(?<type>[u8|i8|u16|i16|u32|i32|u64|i64|char|uchar|string])(?<name>\w+);??/g
+
 }
 
 /**
@@ -64,5 +69,8 @@ export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
  */
 export default (descriptor: string) => {
     const blocks = findStructBlocks(descriptor);
+    const structs = [];
 
+    if(Array.isArray(blocks)) {}
+    else {}
 }

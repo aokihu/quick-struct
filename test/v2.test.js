@@ -10,7 +10,7 @@ describe("Test compile methods", () => {
                 u16 c;
             }
         `
-        const [name, _] = findStructBlocks(str)
+        const [name, _] = findStructBlocks(str)[0]
         assert.equal(name, 'default', 'default name is error')
     })
     
@@ -22,7 +22,7 @@ describe("Test compile methods", () => {
                 u16 c;
             }
         `
-        const [name, _] = findStructBlocks(str)
+        const [name, _] = findStructBlocks(str)[0]
         assert.equal(name, 'Person', 'name is not "Person"')
     })
 
