@@ -9,6 +9,7 @@
   "author": "aokihu <aokihu@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "pretest": "npx tsc",
     "test": "npx mocha"
   }
 }
