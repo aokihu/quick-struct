@@ -37,16 +37,6 @@
  * ------------------------------------------------------------
  */
 
-
- 
-/* ---------------------------------- */
-/*          REGEXP DEFINITION         */
-/* ---------------------------------- */
-
-
-const STRUCT_BLOCK_PARTTEN = "\\bstruct(?<name>\\w*)\\{(?<body>\\S*?)\\}"
-const STRUCT_LINE_PARTTEN = /(\S+)\s(\w+)(\[(\d+)\])?/g
-
 /**
  * find struct block string
  * @param descriptor struct description string
@@ -54,8 +44,8 @@ const STRUCT_LINE_PARTTEN = /(\S+)\s(\w+)(\[(\d+)\])?/g
  * @returns [structName, blockString]
  */
 export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
-    const regexp = new RegExp(STRUCT_BLOCK_PARTTEN, 'g')
-    const desc = preprocess(descriptor)
+    const regexp = /\bstruct(?<name>\w*)\{(?<body>\S*?)\}/g
+    const desc = descriptor.trim().replace(/\s/g, '')
     const structs: any[] = [];
     
     let result;
@@ -67,12 +57,6 @@ export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
     
     return structs.length === 0 ? null : structs.length > 1 ? structs : structs[0]
 }
-
-/**
- * 
- * @param descriptor struct description string
- */
-const preprocess = (descriptor: string)  => (descriptor.trim().replace(/\s/g, ''))
 
 /**
  * @exports compile()
