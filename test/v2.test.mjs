@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {findStructBlocks, parseBody, compile} from '../build/compile.js'
+import { findStructBlocks, parseBody, compile } from '../build/compile.js'
 
 describe("Test compile methods", () => {
     it("No name struct, it will return 'default'", () => {
@@ -13,7 +13,7 @@ describe("Test compile methods", () => {
         const [name, _] = findStructBlocks(str)[0]
         assert.equal(name, 'default', 'default name is error')
     })
-    
+
     it("Struct name is 'Person', it will return 'Person'", () => {
         const str = `
             struct Person {
@@ -59,6 +59,12 @@ describe("Test compile methods", () => {
         assert.equal(rows.length, 2, 'rows length is not 2')
     })
 
+
+})
+
+
+describe("Test compile() method", () => {
+
     it("compile() test, it will return only one result set", () => {
         const str = `
             struct {
@@ -71,12 +77,12 @@ describe("Test compile methods", () => {
         const row1 = structs[0]
         assert.equal(structs.length, 1, 'result set length is not 1')
         assert.equal(row1[0], 'default', 'the name is not "default"')
-        assert.equal(row1[1][0][0], 'u8', 'the type is not "u8"')
-        assert.equal(row1[1][0][1], 'a', 'the name is not "a"')
-        assert.equal(row1[1][1][0], 'u16', 'the type is not "u16"')
-        assert.equal(row1[1][1][1], 'c_1', 'the name is not "c_1"')
+        assert.equal(row1[1][0][1], 10, 'the type is not "u8"')
+        assert.equal(row1[1][0][0], 'a', 'the name is not "a"')
+        assert.equal(row1[1][1][1], 12, 'the type is not "u16"')
+        assert.equal(row1[1][1][0], 'c_1', 'the name is not "c_1"')
     })
-    
+
     it("compile() test, char type", () => {
         const str = `
             struct {
@@ -88,8 +94,8 @@ describe("Test compile methods", () => {
         const row1 = structs[0]
         assert.equal(structs.length, 1, 'result set length is not 1')
         assert.equal(row1[0], 'default', 'the name is not "default"')
-        assert.equal(row1[1][0][0], 'char', 'the type is not "char"')
-        assert.equal(row1[1][0][1], 'name', 'the name is not "name"')
+        assert.equal(row1[1][0][1], 20, 'the type is not "char"')
+        assert.equal(row1[1][0][0], 'name', 'the name is not "name"')
         assert.equal(row1[1][0][2], 16, 'the name is not 16')
     })
 })

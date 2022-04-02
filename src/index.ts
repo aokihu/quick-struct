@@ -7,34 +7,19 @@
  * License MIT
  * Copyright (c) 2022 aokihu
  */
-
-//  const C_TYPES = {
-//     'char': [Uint8Array, 1],
-//     'uchar': [Uint8Array, 1],
-//     'i8': [Int8Array, 1],
-//     'u8': [Uint8Array, 1],
-//     'i16': [Int16Array, 2],
-//     'u16': [Uint16Array, 2],
-//     'i32': [Int32Array, 4],
-//     'u32': [Uint32Array, 4],
-//     'i64': [Int16Array, 8],
-//     'u64': [BigUint64Array, 8]
-// }
-
-enum C_TYPES {
-    
-}
 import type { StructBlocks } from './compile'; './compile'
-import {compile} from './compile'
+import { compile } from './compile'
+import { CODE_TO_BYTE_SIZE, CODE_TO_TYPEVIEW } from './types_map';
 
 export class JSCStruct {
     /* ---------------------------------- */
     /*             Properties             */
     /* ---------------------------------- */
 
-    private _rawString: string = '';        // struct descripted string
-    private _keyNames: string[] = [];       // array to store key name
-    private _blocks: StructBlocks = [];     // array to store binary parsed data
+    private _rawString: string = '';         // struct descripted string
+    private _fieldNames: string[] = [];      // array to store key name
+    private _decodeFiledDataset: any[] = []; // decoed binary data
+    private _structs: StructBlocks = [];     // array to store binary parsed data
 
     /* ---------------------------------- */
     /*             Constructor            */
@@ -42,45 +27,76 @@ export class JSCStruct {
 
     constructor(rawString: string) {
         this._rawString = rawString;
-        this._blocks = compile(rawString)
+        this._structs = compile(rawString)
+
+        const defaultStruct = this.findStruct()
+        const [_, fields] = defaultStruct!;
+        this._fieldNames = fields.map(field => field[0])
     }
-    
+
 
     /* ---------------------------------- */
     /*           Private methods          */
     /* ---------------------------------- */
 
-    findStruckBlock(name: string = 'default') {
-        return this._blocks.find(b => b[0] === name)
+    findStruct(name: string = 'default') {
+        return this._structs.find(s => s[0] === name)
     }
 
     /* ---------------------------------- */
     /*           Public methods           */
     /* ---------------------------------- */
 
-    decode(buffer: ArrayBuffer, structName: string = 'default' ) {
-        const struct = this.findStruckBlock(structName);
+    decode(buffer: ArrayBuffer, structName: string = 'default') {
+        const struct = this.findStruct(structName);
         const [name, fields] = struct!
 
         let pos = 0;
         let offset = 0;
         let idx = 0;
-        let buf:ArrayBuffer;
+        let byteSize = 0;
+        let buf: ArrayBuffer;
+        let unpackValue: any
 
-        for(; idx < fields.length; idx += 1) {
+        for (; idx < fields.length; idx += 1) {
             const field = fields[idx]
-            const _type = field[0]
-            const _name = field[1]
+            const _fieldName = field[0]
+            const _typeCode = field[1]
             const _len = field[2]
-            
-            offset = pos + _len;
-            buf = buffer.slice(pos, offset);
-            pos += offset;
-        }
+            const _isArray = field[3]
 
-        console.log( name, fields)
+            byteSize = CODE_TO_BYTE_SIZE[_typeCode]
+            // console.log(_fieldName, _typeCode, _len, _isArray)
+
+            offset = _isArray ? pos + byteSize + _len - 1 : pos + byteSize;
+            buf = buffer.slice(pos, offset);
+            pos = offset;
+
+            const _unpack = new CODE_TO_TYPEVIEW[_typeCode](buf)
+
+            if (_isArray === 0) {
+                unpackValue = _unpack[0]
+            }
+
+            if (_isArray === 1) {
+                unpackValue = Array.prototype.slice.call(_unpack)
+
+                // stirng
+                if (_typeCode === 20 || _typeCode === 21 || _typeCode === 22) {
+                    unpackValue = String.fromCharCode(...unpackValue)
+                }
+            }
+
+            this._decodeFiledDataset[idx] = unpackValue;
+
+        }
+        return this;
     }
 
-
+    toJson() {
+        return this._fieldNames.reduce((T, fieldName, idx) => {
+            return { ...T, [fieldName]: this._decodeFiledDataset[idx] }
+        }, {})
+    }
 
 }

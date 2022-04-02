@@ -1,8 +1,10 @@
 export declare class JSCStruct {
     private _rawString;
-    private _keyNames;
-    private _blocks;
+    private _fieldNames;
+    private _decodeFiledDataset;
+    private _structs;
     constructor(rawString: string);
-    findStruckBlock(name?: string): [string, import("./compile").FieldRecordArray] | undefined;
-    decode(buffer: ArrayBuffer, structName?: string): void;
+    findStruct(name?: string): [string, import("./compile").FieldRecordArray] | undefined;
+    decode(buffer: ArrayBuffer, structName?: string): this;
+    toJson(): {};
 }

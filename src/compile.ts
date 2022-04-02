@@ -37,6 +37,8 @@
  * ------------------------------------------------------------
  */
 
+import { TYPE_TO_CODE } from "./types_map"
+
 /* ---------------------------------- */
 /*            Type declare            */
 /* ---------------------------------- */
@@ -52,8 +54,9 @@ export type StructBlockRecordArray = Array<StructBlockRecord>
 
 export interface FieldRecord {
     [0]: string     // Field data type
-    [1]: string     // Field name
-    [2]: number     // Bytes length, variable length, it will be -1
+    [1]: number     // Field name
+    [2]: number     // Bytes length, default is 0, variable length it will be -1
+    [3]: number     // Array flag, 0 is not array, 1 is array
 }
 
 export type FieldRecordArray = Array<FieldRecord>
@@ -72,9 +75,9 @@ export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
     const regexp = /\bstruct(?<name>\w*)\{(?<body>\S*?)\}/g
     const desc = descriptor.trim().replace(/\s/g, '')
     const structs: StructBlockRecordArray = [];
-    
+
     let result;
-    while((result = regexp.exec(desc)) !== null) {
+    while ((result = regexp.exec(desc)) !== null) {
         let [_, _name, _body] = result
         _name = _name === '' ? 'default' : _name
         structs.push([_name, _body])
@@ -92,7 +95,7 @@ export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
  *   [
  *      structName: string, 
  *      [
- *          [typeName: string, fieldName: string, byteLength: number],
+ *          [field_name: string, type_code: number, byte_length: number],
  *          ...
  *      ]
  *   ],
@@ -101,14 +104,16 @@ export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
  */
 export const parseBody = (body: string) => {
     const regexp = /(?<type>u8|i8|u16|i16|u32|i32|u64|i64|char|uchar|string)(?<name>\w+)(?:\[(\d+)\])?;??/g
-    
+
     const rows: FieldRecordArray = []
     let result;
-    
-    while((result = regexp.exec(body)) !== null) {
+
+    while ((result = regexp.exec(body)) !== null) {
         let [_, _type, _name, _length] = result
-        let _len = _length ? Number(_length) : 1
-        rows.push([_type, _name, _len])
+        const _typeCode: number = TYPE_TO_CODE[_type]
+        const _isArray = _length ? 1 : 0
+        let _len = _length ? Number(_length) : 0
+        rows.push([_name, _typeCode, _len, _isArray])
     }
     return rows;
 }
@@ -120,9 +125,9 @@ export const parseBody = (body: string) => {
 export const compile = (descriptor: string) => {
     const blocks = findStructBlocks(descriptor);
     return blocks.map((b) => {
-        const _name = b[0]
+        const _structName = b[0]
         const _body = b[1]
         const _rows = parseBody(_body)
-        return [_name, _rows]
+        return [_structName, _rows]
     }) as StructBlocks
 }

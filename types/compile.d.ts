@@ -6,8 +6,9 @@ export interface StructBlockRecord {
 export declare type StructBlockRecordArray = Array<StructBlockRecord>;
 export interface FieldRecord {
     [0]: string;
-    [1]: string;
+    [1]: number;
     [2]: number;
+    [3]: number;
 }
 export declare type FieldRecordArray = Array<FieldRecord>;
 export declare const findStructBlocks: (descriptor: string, fromIndex?: number) => StructBlockRecordArray;
