@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseBody = exports.findStructBlocks = void 0;
+exports.compile = exports.parseBody = exports.findStructBlocks = void 0;
 const findStructBlocks = (descriptor, fromIndex = 0) => {
     const regexp = /\bstruct(?<name>\w*)\{(?<body>\S*?)\}/g;
     const desc = descriptor.trim().replace(/\s/g, '');
@@ -26,7 +26,7 @@ const parseBody = (body) => {
     return rows;
 };
 exports.parseBody = parseBody;
-exports.default = (descriptor) => {
+const compile = (descriptor) => {
     const blocks = (0, exports.findStructBlocks)(descriptor);
     return blocks.map((b) => {
         const _name = b[0];
@@ -35,3 +35,4 @@ exports.default = (descriptor) => {
         return [_name, _rows];
     });
 };
+exports.compile = compile;

@@ -41,20 +41,22 @@
 /*            Type declare            */
 /* ---------------------------------- */
 
-declare interface StructBlockRecord {
+export type StructBlocks = Array<[string, FieldRecordArray]>
+
+export interface StructBlockRecord {
     [0]: string     // struct name
     [1]: string     // struct definition field string
 }
 
-declare type StructBlockRecrdArray = Array<StructBlockRecord>
+export type StructBlockRecordArray = Array<StructBlockRecord>
 
-declare interface FieldRecord {
+export interface FieldRecord {
     [0]: string     // Field data type
     [1]: string     // Field name
     [2]: number     // Bytes length, variable length, it will be -1
 }
 
-declare type FieldRecordArray = Array<FieldRecord>
+export type FieldRecordArray = Array<FieldRecord>
 
 /* ---------------------------------- */
 /*               Methods              */
@@ -69,7 +71,7 @@ declare type FieldRecordArray = Array<FieldRecord>
 export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
     const regexp = /\bstruct(?<name>\w*)\{(?<body>\S*?)\}/g
     const desc = descriptor.trim().replace(/\s/g, '')
-    const structs: StructBlockRecrdArray = [];
+    const structs: StructBlockRecordArray = [];
     
     let result;
     while((result = regexp.exec(desc)) !== null) {
@@ -115,12 +117,12 @@ export const parseBody = (body: string) => {
  * @exports compile()
  * @param structDescriptor C like struct description string
  */
-export default (descriptor: string) => {
+export const compile = (descriptor: string) => {
     const blocks = findStructBlocks(descriptor);
     return blocks.map((b) => {
         const _name = b[0]
         const _body = b[1]
         const _rows = parseBody(_body)
         return [_name, _rows]
-    })
+    }) as StructBlocks
 }

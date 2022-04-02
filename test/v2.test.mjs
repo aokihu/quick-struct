@@ -1,5 +1,5 @@
-const assert = require('assert')
-const {findStructBlocks, parseBody, default: compile} = require('../build/compile.js')
+import assert from 'assert'
+import {findStructBlocks, parseBody, compile} from '../build/compile.js'
 
 describe("Test compile methods", () => {
     it("No name struct, it will return 'default'", () => {
@@ -72,9 +72,9 @@ describe("Test compile methods", () => {
         assert.equal(structs.length, 1, 'result set length is not 1')
         assert.equal(row1[0], 'default', 'the name is not "default"')
         assert.equal(row1[1][0][0], 'u8', 'the type is not "u8"')
-        assert.equal(row1[1][0][01], 'a', 'the name is not "a"')
+        assert.equal(row1[1][0][1], 'a', 'the name is not "a"')
         assert.equal(row1[1][1][0], 'u16', 'the type is not "u16"')
-        assert.equal(row1[1][1][01], 'c_1', 'the name is not "c_1"')
+        assert.equal(row1[1][1][1], 'c_1', 'the name is not "c_1"')
     })
     
     it("compile() test, char type", () => {

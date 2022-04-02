@@ -24,25 +24,63 @@
 enum C_TYPES {
     
 }
+import type { StructBlocks } from './compile'; './compile'
+import {compile} from './compile'
 
-const LINE_PARTTEN = /(\S+)\s(\w+)(\[(\d+)\])?/g
-const ELEMENT_PARTTEN = /(\S+)\[(\d+)\]/
+export class JSCStruct {
+    /* ---------------------------------- */
+    /*             Properties             */
+    /* ---------------------------------- */
 
-class JSCStruct {
-    
-    private _rawString: string = '';  // struct descripted string
-    private _keyNames: string[] = []; // array to store key name
-    private _dataset: any[] = [];     // array to store binary parsed data
+    private _rawString: string = '';        // struct descripted string
+    private _keyNames: string[] = [];       // array to store key name
+    private _blocks: StructBlocks = [];     // array to store binary parsed data
+
+    /* ---------------------------------- */
+    /*             Constructor            */
+    /* ---------------------------------- */
 
     constructor(rawString: string) {
         this._rawString = rawString;
-        this.compile()
+        this._blocks = compile(rawString)
     }
     
-    /* Private methods */
-    
-    compile() {
 
+    /* ---------------------------------- */
+    /*           Private methods          */
+    /* ---------------------------------- */
+
+    findStruckBlock(name: string = 'default') {
+        return this._blocks.find(b => b[0] === name)
     }
+
+    /* ---------------------------------- */
+    /*           Public methods           */
+    /* ---------------------------------- */
+
+    decode(buffer: ArrayBuffer, structName: string = 'default' ) {
+        const struct = this.findStruckBlock(structName);
+        const [name, fields] = struct!
+
+        let pos = 0;
+        let offset = 0;
+        let idx = 0;
+        let buf:ArrayBuffer;
+
+        for(; idx < fields.length; idx += 1) {
+            const field = fields[idx]
+            const _type = field[0]
+            const _name = field[1]
+            const _len = field[2]
+            
+            offset = pos + _len;
+            buf = buffer.slice(pos, offset);
+            pos += offset;
+        }
+
+        console.log( name, fields)
+    }
+
+
 
 }
