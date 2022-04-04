@@ -1,11 +1,6 @@
 {
-  "devDependencies": {
-    "@types/node": "^17.0.23",
-    "mocha": "^9.2.2",
-    "typescript": "^4.6.3"
-  },
   "name": "js-cstruct",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "index.js",
   "author": "aokihu <aokihu@gmail.com>",
   "license": "MIT",
@@ -14,5 +9,10 @@
     "pretest": "npx tsc",
     "test": "npx mocha",
     "bench": "npx tsc && node benchmark/index.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.23",
+    "mocha": "^9.2.2",
+    "typescript": "^4.6.3"
   }
 }
