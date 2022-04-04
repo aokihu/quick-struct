@@ -73,7 +73,7 @@ export class JSCStruct {
 
             const _unpack = new CODE_TO_TYPEVIEW[_typeCode](buf)
 
-            switch(_attr) {
+            switch (_attr) {
                 case 0x0:
                     unpackValue = _unpack[0]
                     break;

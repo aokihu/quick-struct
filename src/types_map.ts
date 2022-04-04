@@ -24,7 +24,8 @@ export const TYPE_TO_CODE: ITYPE_TO_CODE = {
     'double': 19,
     'char': 20,
     'uchar': 21,
-    'string': 22
+    'string': 22,
+    'struct': 23
 }
 
 export interface ICODE_TO_TYPE {
@@ -44,7 +45,8 @@ export const CODE_TO_TYPE: ICODE_TO_TYPE = {
     19: 'double',
     20: 'char',
     21: 'uchar',
-    22: 'string'
+    22: 'string',
+    23: 'struct'
 }
 
 export interface ICODE_TO_TYPEVIEW {
