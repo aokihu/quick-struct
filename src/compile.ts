@@ -109,7 +109,7 @@ export const parseBody = (body: string) => {
     let result;
 
     while ((result = regexp.exec(body)) !== null) {
-        let [_, _type, _name, _length] = result
+        let [_type, _name, _length] = result.slice(1)
         const _typeCode: number = TYPE_TO_CODE[_type]
         const _isArray = _length ? 1 : 0
         let _len = _length ? Number(_length) : 0
