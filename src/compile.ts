@@ -53,10 +53,10 @@ export interface StructBlockRecord {
 export type StructBlockRecordArray = Array<StructBlockRecord>
 
 export interface FieldRecord {
-    [0]: string     // Field data type
-    [1]: number     // Field name
+    [0]: string     // Field name
+    [1]: number     // Field type code
     [2]: number     // Bytes length, default is 0, variable length it will be -1
-    [3]: number     // Array flag, 0 is not array, 1 is array
+    [3]: number     // Attribute
 }
 
 export type FieldRecordArray = Array<FieldRecord>
