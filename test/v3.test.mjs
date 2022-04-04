@@ -92,6 +92,24 @@ describe("JSCStruct class test", () => {
             assert.deepEqual(obj.a, 'hello', 'string is not "hello"')
 
         })
+        
+
+        it("variable length element", () => {
+
+            const str = `
+                struct {
+                    u8 a<size:b>;
+                    u8 b[];
+                }
+            `
+
+            const buf = new Uint8Array([3, 1, 2, 3])
+            const struct = new JSCStruct(str)
+            const obj = struct.decode(buf).toJson()
+            assert.strictEqual(obj.a, 3, 'size is not 3')
+            assert.deepEqual(obj.b, [1, 2, 3], 'array is not [1, 2, 3]')
+
+        })
 
         
     })
