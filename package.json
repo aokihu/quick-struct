@@ -4,6 +4,17 @@
   "main": "index.js",
   "author": "aokihu <aokihu@gmail.com>",
   "license": "MIT",
+  "keywords": [
+    "bin",
+    "binary",
+    "convert",
+    "arraybuffer",
+    "buffer",
+    "struct",
+    "c",
+    "rust"
+  ],
+  "description": "this is library convert binary to javascript object, it's easy to write struct description, it is like C-style struct",
   "scripts": {
     "build": "npx tsc",
     "pretest": "npx tsc",
