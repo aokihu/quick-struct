@@ -72,13 +72,13 @@ export type FieldRecordArray = Array<FieldRecord>
  * @returns [structName, blockString]
  */
 export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
-    const regexp = /\bstruct(?<name>\w*)\{(?<body>\S*?)\}/g
+    const regexp = /\bstruct(\w*)\{(\S*?)\}/g
     const desc = descriptor.trim().replace(/\s/g, '')
     const structs: StructBlockRecordArray = [];
 
     let result;
     while ((result = regexp.exec(desc)) !== null) {
-        let [_, _name, _body] = result
+        let [_name, _body] = result.slice(1)
         _name = _name === '' ? 'default' : _name
         structs.push([_name, _body])
     }
@@ -103,7 +103,7 @@ export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
  * ]
  */
 export const parseBody = (body: string) => {
-    const regexp = /(?<type>u8|i8|u16|i16|u32|i32|u64|i64|f32|f64|char|uchar|string)(?<name>\w+)(?:\[(\d+)\])?;??/g
+    const regexp = /(u8|i8|u16|i16|u32|i32|u64|i64|f32|f64|char|uchar|string)(\w+)(?:\[(\d+)\])?;??/g
 
     const rows: FieldRecordArray = []
     let result;
