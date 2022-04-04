@@ -116,8 +116,13 @@ export const parseAttribute = (
     if (length === undefined && typeCode < 20) { return 0x0 }
 
     if (length !== undefined) {
-        if (typeCode < 20) { return 0x2 }
-        if (typeCode >= 20 && typeCode <= 22) { return 0x1 | 0x2 }
+        if (length !== '') {
+            if (typeCode < 20) { return 0x2 }
+            if (typeCode >= 20 && typeCode <= 22) { return 0x3 }
+        } else {
+            if (typeCode < 20) { return 0x6 }
+            if (typeCode >= 20 && typeCode <= 22) { return 0x7 }
+        }
     }
 
     return 0;
