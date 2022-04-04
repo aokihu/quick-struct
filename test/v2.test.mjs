@@ -78,6 +78,34 @@ describe("JSCStruct class test", () => {
             assert.deepEqual(obj.a, [15, 16, 17], 'element is not a uin8 array')
         })
 
+        it("element is u16 array", () => {
+            const str = `
+                struct {
+                    u16 a[3];
+                }
+            `
+            const arr = [4566, 2331, 982]
+            const buf = new Uint16Array(arr)
+            const struct = new JSCStruct(str)
+            const obj = struct.decode(buf).toJson()
+            assert.deepEqual(obj.a, arr, 'element is not a uin32 array')
+        })
+
+
+        it("element is u32 array", () => {
+            const str = `
+                struct {
+                    u32 a[3];
+                }
+            `
+
+            const arr = [90000, 120000, 34000000]
+            const buf = new Uint32Array(arr)
+            const struct = new JSCStruct(str)
+            const obj = struct.decode(buf).toJson()
+            assert.deepEqual(obj.a, arr, 'element is not a uin32 array')
+        })
+
         it("element is chars", () => {
 
             const str = `
