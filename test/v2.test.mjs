@@ -1,101 +1,119 @@
 import assert from 'assert'
-import { findStructBlocks, parseBody, compile } from '../build/compile.js'
+import { JSCStruct } from '../build/index.js'
 
-describe("Test compile methods", () => {
-    it("No name struct, it will return 'default'", () => {
-        const str = `
-            struct {
-                u8 a;
-                u8 b;
-                u16 c;
-            }
-        `
-        const [name, _] = findStructBlocks(str)[0]
-        assert.equal(name, 'default', 'default name is error')
+describe("JSCStruct class test", () => {
+
+    describe("Anonymous struct test", () => {
+
+        it("uint8 element and equal 16", () => {
+            const str = `
+                struct {
+                    u8 a;
+                }
+            `
+            const buf = new Uint8Array([16])
+            const struct = new JSCStruct(str);
+            const obj = struct.decode(buf).toJson();
+            assert.strictEqual(obj.a, 16, 'first element is not equal 16')
+        })
+
+        it("int8 element and equal -16", () => {
+            const str = `
+                struct {
+                    i8 a;
+                }
+            `
+            const buf = new Int8Array([-16])
+            const struct = new JSCStruct(str);
+            const obj = struct.decode(buf).toJson();
+            assert.strictEqual(obj.a, -16, 'first element is not equal -16')
+        })
+
+        it("uint8 element and not equal -16", () => {
+            const str = `
+                struct {
+                    u8 a;
+                }
+            `
+            const buf = new Int8Array([-16])
+            const struct = new JSCStruct(str);
+            const obj = struct.decode(buf).toJson();
+            assert.notEqual(obj.a, -16, 'first element is not equal -16')
+        })
+
+        it("uint16 element and equal 3124", () => {
+            const str = `
+                struct {
+                    u16 a;
+                }
+            `
+            const buf = new Uint16Array([3124])
+            const struct = new JSCStruct(str);
+            const obj = struct.decode(buf).toJson();
+            assert.strictEqual(obj.a, 3124, 'first element is not equal 3124')
+        })
+
+        it("uint32 element and equal 593124", () => {
+            const str = `
+                struct {
+                    u32 a;
+                }
+            `
+            const buf = new Uint32Array([593124])
+            const struct = new JSCStruct(str);
+            const obj = struct.decode(buf).toJson();
+            assert.strictEqual(obj.a, 593124, 'first element is not equal 593124')
+        })
+
+        it("element is u8 array", () => {
+            const str = `
+                struct {
+                    u8 a[3];
+                }
+            `
+
+            const buf = new Uint8Array([15, 16, 17])
+            const struct = new JSCStruct(str)
+            const obj = struct.decode(buf).toJson()
+            assert.deepEqual(obj.a, [15, 16, 17], 'element is not a uin8 array')
+        })
+
+        it("element is chars", () => {
+
+            const str = `
+                struct {
+                    char a[5]
+                }
+            `
+
+            const buf = Uint8Array.from("hello".split('').map(w => w.charCodeAt(0)))
+            const struct = new JSCStruct(str)
+            const obj = struct.decode(buf).toJson();
+            assert.deepEqual(obj.a, 'hello', 'string is not "hello"')
+
+        })
+
+
+        it("variable length element", () => {
+
+            const str = `
+                struct {
+                    u8 a<size:b>;
+                    u8 b[];
+                }
+            `
+
+            const buf = new Uint8Array([3, 1, 2, 3])
+            const struct = new JSCStruct(str)
+            const obj = struct.decode(buf).toJson()
+            assert.strictEqual(obj.a, 3, 'size is not 3')
+            assert.deepEqual(obj.b, [1, 2, 3], 'array is not [1, 2, 3]')
+
+        })
+
+
     })
 
-    it("Struct name is 'Person', it will return 'Person'", () => {
-        const str = `
-            struct Person {
-                u8 a;
-                u8 b;
-                u16 c;
-            }
-        `
-        const [name, _] = findStructBlocks(str)[0]
-        assert.equal(name, 'Person', 'name is not "Person"')
-    })
-
-    it("2 Struct definition, length equal 2", () => {
-        const str = `
-            struct Animal0 {
-                u8 a;
-                u16 c;
-            }
-
-            struct Person {
-                u8 a;
-                u8 b;
-                u16 c;
-            }
-        `
-        const structs = findStructBlocks(str)
-        assert.equal(structs.length, 2, 'length is not 2')
-        assert.equal(structs[0][0], 'Animal0', 'name is not "Animal0"')
-        assert.equal(structs[1][0], 'Person', 'name is not "Person"')
-    })
-
-    it("Records's length is 2", () => {
-        const str = `
-            struct {
-                u8 a;
-                u16 c_1;
-            }
-        `
-        const structs = findStructBlocks(str)
-        const [name, body] = structs[0]
-        const rows = parseBody(body);
-        assert.equal(name, 'default', 'name is not "default"')
-        assert.equal(rows.length, 2, 'rows length is not 2')
-    })
 
 
-})
-
-
-describe("Test compile() method", () => {
-
-    it("compile() test, it will return only one result set", () => {
-        const str = `
-            struct {
-                u8 a;
-                u16 c_1;
-            }
-        `
-
-        const structs = compile(str);
-        const row1 = structs[0]
-        assert.equal(structs.length, 1, 'result set length is not 1')
-        assert.equal(row1[0], 'default', 'the name is not "default"')
-        assert.equal(row1[1][0][1], 10, 'the type is not "u8"')
-        assert.equal(row1[1][0][0], 'a', 'the name is not "a"')
-        assert.equal(row1[1][1][1], 12, 'the type is not "u16"')
-        assert.equal(row1[1][1][0], 'c_1', 'the name is not "c_1"')
-    })
-
-    it("compile() test, char type", () => {
-        const str = `
-            struct {
-                char name[16];
-            }
-        `
-
-        const structs = compile(str);
-        const row1 = structs[0]
-        assert.equal(structs.length, 1, 'result set length is not 1')
-        assert.equal(row1[0], 'default', 'the name is not "default"')
-        assert.equal(row1[1][0][1], 20, 'the type is not "char"')
-        assert.equal(row1[1][0][0], 'name', 'the name is not "name"')
-        assert.equal(row1[1][0][2], 16, 'the name is not 16')
-    })
 })
