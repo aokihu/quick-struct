@@ -60,13 +60,11 @@ export class JSCStruct {
 
         for (; idx < fields.length; idx += 1) {
             const field = fields[idx]
-            const _fieldName = field[0]
             const _typeCode = field[1]
             const _len = field[2]
             const _isArray = field[3]
 
             byteSize = CODE_TO_BYTE_SIZE[_typeCode]
-            // console.log(_fieldName, _typeCode, _len, _isArray)
 
             offset = _isArray ? pos + byteSize + _len - 1 : pos + byteSize;
             buf = buffer.slice(pos, offset);
@@ -88,8 +86,8 @@ export class JSCStruct {
             }
 
             this._decodeFiledDataset[idx] = unpackValue;
-
         }
+
         return this;
     }
 
