@@ -113,18 +113,14 @@ export const parseAttribute = (
     length: undefined | string,
     expand?: string
 ) => {
-    let _attr = 0;
-
-    if (length === undefined && typeCode < 20) { _attr = 0x0 }
+    if (length === undefined && typeCode < 20) { return 0x0 }
 
     if (length !== undefined) {
-
-        if (typeCode < 20) { _attr = 0x2 }
-        if (typeCode >= 20 && typeCode <= 22) { _attr = 0x1 | 0x2 }
-
+        if (typeCode < 20) { return 0x2 }
+        if (typeCode >= 20 && typeCode <= 22) { return 0x1 | 0x2 }
     }
 
-    return _attr;
+    return 0;
 }
 
 /**
