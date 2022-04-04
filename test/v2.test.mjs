@@ -131,14 +131,65 @@ describe("JSCStruct class test", () => {
                 }
             `
 
-            const buf = new Uint8Array([3, 1, 2, 3])
+            const arr = [3, 4, 5, 6]
+            const buf = new Uint8Array(arr)
             const struct = new JSCStruct(str)
             const obj = struct.decode(buf).toJson()
             assert.strictEqual(obj.a, 3, 'size is not 3')
-            assert.deepEqual(obj.b, [1, 2, 3], 'array is not [1, 2, 3]')
+            assert.deepEqual(obj.b, arr.slice(1), 'array is not [4,5,6]')
 
         })
 
+
+        it("variable length string", () => {
+
+            const str = `
+                struct {
+                    u8 a;
+                    char b[];
+                }
+            `
+            const text = "hello"
+            const arr = [text.length, ...(new TextEncoder()).encode(text)]
+            const buf = new Uint8Array(arr)
+            const struct = new JSCStruct(str)
+            const obj = struct.decode(buf).toJson()
+            assert.strictEqual(obj.a, text.length, `size is not ${text.length}`)
+            assert.deepEqual(obj.b, text, `array is not "${text}"`)
+        })
+
+        it("compact type", () => {
+
+            const str = `
+                struct {
+                    u8 index;
+                    u8 phone_size;
+                    char phone[]
+                    u8 address_size;
+                    char address[];
+                }
+            `
+
+            const index = 12
+            const phone = "+010988888"
+
+            const address = "Phnoix."
+            const arr = [index,
+                phone.length,
+                ...(new TextEncoder()).encode(phone),
+                address.length,
+                ...(new TextEncoder()).encode(address)
+            ]
+
+            const buf = new Uint8Array(arr)
+            const struct = new JSCStruct(str)
+            const obj = struct.decode(buf).toJson()
+            assert.strictEqual(obj.index, index, `index is not ${index}`)
+            assert.strictEqual(obj.phone_size, phone.length, `phone size is not ${phone.length}`)
+            assert.strictEqual(obj.address, address, `addres is not '${address}'`)
+            assert.strictEqual(obj.phone_size, phone.length, `phone size is not ${phone.length}`)
+            assert.strictEqual(obj.phone, phone, `phone is not '${phone}'`)
+        })
 
     })
 

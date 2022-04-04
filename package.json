@@ -12,6 +12,7 @@
   "scripts": {
     "build": "npx tsc",
     "pretest": "npx tsc",
-    "test": "npx mocha"
+    "test": "npx mocha",
+    "bench": "npx tsc && node benchmark/index.mjs"
   }
 }
