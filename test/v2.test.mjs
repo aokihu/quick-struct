@@ -126,7 +126,7 @@ describe("JSCStruct class test", () => {
 
             const str = `
                 struct {
-                    u8 a<size:b>;
+                    u8 a;
                     u8 b[];
                 }
             `
