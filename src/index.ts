@@ -63,14 +63,14 @@ export class JSCStruct {
             const _typeCode = field[1]
             const _len = field[2]
             const _attr = field[3]
-            const _isArray: boolean = _attr === 0x2 || _attr === 0x1;
+            const _isArray: boolean = (_attr & 0x2) === 0x2;
 
             byteSize = CODE_TO_BYTE_SIZE[_typeCode]
 
             offset = _isArray ? pos + byteSize + _len - 1 : pos + byteSize;
             buf = buffer.slice(pos, offset);
-            pos = offset;
 
+            // Contruct a new typedview
             const _unpack = new CODE_TO_TYPEVIEW[_typeCode](buf)
 
             switch (_attr) {
@@ -78,23 +78,33 @@ export class JSCStruct {
                     unpackValue = _unpack[0]
                     break;
                 case 0x2:
-                    unpackValue = Array.prototype.slice.call(_unpack)
+                    unpackValue = [..._unpack]
                     break;
-                case 0x1:
-                    unpackValue = String.fromCharCode(...Array.prototype.slice.call(_unpack))
+                case 0x3:
+                    unpackValue = (new TextDecoder()).decode(buf)
                     break;
             }
 
             this._decodeFiledDataset[idx] = unpackValue;
         }
 
+        pos = offset;
         return this;
     }
 
-    toJson() {
-        return this._fieldNames.reduce((T, fieldName, idx) => {
-            return { ...T, [fieldName]: this._decodeFiledDataset[idx] }
-        }, {})
-    }
+    /**
+     * Ouput decode data with json
+     * @returns Decode binary data
+     */
+    toJson = () => (this._fieldNames.reduce((T, name, idx) => {
+        return { ...T, [name]: this._decodeFiledDataset[idx] }
+    }, {})
+    )
+
+    /**
+     * a.k.a toJson()
+     * @returns Decode binary result
+     */
+    toJSON = () => this.toJson()
 
 }

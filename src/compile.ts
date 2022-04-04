@@ -104,11 +104,15 @@ export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
  * 1: [0] digital   [1] string
  * 2: [0] not array [1] array
  * 3: [0] fixed     [1] variable
+ * 
+ * P.S. 
+ * String and digital array are array, bit 2 is '1'
  */
 export const parseAttribute = (
     typeCode: number,
     length: undefined | string,
-    expand?: string) => {
+    expand?: string
+) => {
     let _attr = 0;
 
     if (length === undefined && typeCode < 20) { _attr = 0x0 }
@@ -116,7 +120,7 @@ export const parseAttribute = (
     if (length !== undefined) {
 
         if (typeCode < 20) { _attr = 0x2 }
-        if (typeCode >= 20 && typeCode <= 22) { _attr = 0x1 }
+        if (typeCode >= 20 && typeCode <= 22) { _attr = 0x1 | 0x2 }
 
     }
 

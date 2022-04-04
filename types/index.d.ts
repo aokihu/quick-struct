@@ -6,5 +6,6 @@ export declare class JSCStruct {
     constructor(rawString: string);
     findStruct(name?: string): [string, import("./compile").FieldRecordArray] | undefined;
     decode(buffer: ArrayBuffer, structName?: string): this;
-    toJson(): {};
+    toJson: () => {};
+    toJSON: () => {};
 }
