@@ -12,5 +12,6 @@ export interface FieldRecord {
 }
 export declare type FieldRecordArray = Array<FieldRecord>;
 export declare const findStructBlocks: (descriptor: string, fromIndex?: number) => StructBlockRecordArray;
+export declare const parseAttribute: (typeCode: number, length: undefined | string, expand?: string | undefined) => number;
 export declare const parseBody: (body: string) => FieldRecordArray;
 export declare const compile: (descriptor: string) => StructBlocks;

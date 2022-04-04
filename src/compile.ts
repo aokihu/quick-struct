@@ -86,6 +86,44 @@ export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
 }
 
 /**
+ * 
+ * @param typeCode 
+ * @param length 
+ * @param expand 
+ * @returns attribute number
+ * 
+ * Attribute
+ * 
+ * +---+---+---+---+---+---+---+---+
+ * | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |
+ * +---+---+---+---+---+---+---+---+
+ *                               ^
+ *                               |
+ *                 FIRST BIT ----+
+ * ---------------------------------
+ * 1: [0] digital   [1] string
+ * 2: [0] not array [1] array
+ * 3: [0] fixed     [1] variable
+ */
+export const parseAttribute = (
+    typeCode: number, 
+    length: undefined | string, 
+    expand?: string) => {
+        let _attr = 0;
+
+        if(length === undefined && typeCode < 20) { _attr = 0x0 }
+
+        if(length !== undefined) {
+            
+            if(typeCode < 20) { _attr = 0x2 }
+            if(typeCode >= 20 && typeCode <= 22) {  _attr = 0x1}
+
+        }
+
+        return _attr;
+}
+
+/**
  * parse struct definition string
  * @param body struct definition string
  * @returns Array
@@ -95,7 +133,12 @@ export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
  *   [
  *      structName: string, 
  *      [
- *          [field_name: string, type_code: number, byte_length: number],
+ *          [
+ *              field_name: string, 
+ *              type_code: number, 
+ *              byte_length: number,
+ *              attribute: number,
+ *          ],
  *          ...
  *      ]
  *   ],
@@ -110,10 +153,11 @@ export const parseBody = (body: string) => {
 
     while ((result = regexp.exec(body)) !== null) {
         let [_type, _name, _length] = result.slice(1)
+
         const _typeCode: number = TYPE_TO_CODE[_type]
-        const _isArray = _length ? 1 : 0
         let _len = _length ? Number(_length) : 0
-        rows.push([_name, _typeCode, _len, _isArray])
+        const _attribute = parseAttribute(_typeCode, _length);
+        rows.push([_name, _typeCode, _len, _attribute])
     }
     return rows;
 }

@@ -62,7 +62,8 @@ export class JSCStruct {
             const field = fields[idx]
             const _typeCode = field[1]
             const _len = field[2]
-            const _isArray = field[3]
+            const _attr = field[3]
+            const _isArray: boolean = _attr === 0x2 || _attr === 0x1;
 
             byteSize = CODE_TO_BYTE_SIZE[_typeCode]
 
@@ -72,17 +73,16 @@ export class JSCStruct {
 
             const _unpack = new CODE_TO_TYPEVIEW[_typeCode](buf)
 
-            if (_isArray === 0) {
-                unpackValue = _unpack[0]
-            }
-
-            if (_isArray === 1) {
-                unpackValue = Array.prototype.slice.call(_unpack)
-
-                // stirng
-                if (_typeCode === 20 || _typeCode === 21 || _typeCode === 22) {
-                    unpackValue = String.fromCharCode(...unpackValue)
-                }
+            switch(_attr) {
+                case 0x0:
+                    unpackValue = _unpack[0]
+                    break;
+                case 0x2:
+                    unpackValue = Array.prototype.slice.call(_unpack)
+                    break;
+                case 0x1:
+                    unpackValue = String.fromCharCode(...Array.prototype.slice.call(_unpack))
+                    break;
             }
 
             this._decodeFiledDataset[idx] = unpackValue;
