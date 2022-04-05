@@ -1,5 +1,10 @@
+node_modules
+dist
 src
 test
 benchmark
 ci.sh
 tsconfig.json
+*.tgz
+*.log
+*.config.js
