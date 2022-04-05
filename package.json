@@ -1,6 +1,6 @@
 {
-  "name": "js-cstruct",
-  "version": "0.1.0",
+  "name": "quick-struct",
+  "version": "0.1.1",
   "main": "build/index.js",
   "author": "aokihu <aokihu@gmail.com>",
   "license": "MIT",

@@ -10,3 +10,4 @@ export declare class JSCStruct {
     toJson: () => {};
     toJSON: () => {};
 }
+export declare function qs(sds: TemplateStringsArray): JSCStruct;

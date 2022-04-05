@@ -156,3 +156,13 @@ export class JSCStruct {
     toJSON = () => this.toJson()
 
 }
+
+/**
+ *
+ * Template string function
+ * reuten instance of JSCtruct
+ *
+ */
+export function qs(sds: TemplateStringsArray) {
+    return new JSCStruct(sds.raw[0]);
+}
