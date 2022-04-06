@@ -135,7 +135,7 @@ export class JSCStruct {
           break;
         case 0x2:
         case 0x6:
-          decodedValue = [..._decode];
+          decodedValue = Array.from(_decode);
           break;
         case 0x3:
         case 0x7:
