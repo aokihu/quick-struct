@@ -60,7 +60,8 @@ export class JSCStruct {
     let buf: ArrayBuffer;
     let decodedValue: any;
 
-    for (; idx < fields.length; idx += 1) {
+    const tIdx = fields.length;
+    for (; idx < tIdx; idx += 1) {
       const field = fields[idx];
       const _typeCode = field[1];
       const _fixedLength = field[2];
