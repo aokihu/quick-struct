@@ -1,6 +1,7 @@
 {
   "name": "quick-struct",
-  "version": "0.1.1",
+  "types": "types",
+  "version": "0.2.0",
   "main": "build/index.js",
   "author": "aokihu <aokihu@gmail.com>",
   "license": "MIT",
@@ -17,6 +18,13 @@
     "decode"
   ],
   "description": "this is library convert binary to javascript object, it's easy to write struct description, it is like C-style struct",
+  "homepage": "https://github.com/aokihu/js-cstruct",
+  "maintainers": ["aokihu@gmail.com"],
+  "publisher": "aokihu@gmail.com",
+  "bugs": {
+    "email": "aokihu@gmail.com",
+    "url": "https://github.com/aokihu/js-cstruct/issues"
+  },
   "scripts": {
     "prepack": "npx tsc",
     "build": "npx tsc",
