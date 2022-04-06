@@ -47,8 +47,10 @@ export class JSCStruct {
   /*           Private methods          */
   /* ---------------------------------- */
 
-  findStruct(name: string = "default") {
-    return this._structs.find((s) => s[0] === name);
+  findStruct(name?: string) {
+    return arguments.length === 0
+      ? this._structs[0]
+      : this._structs.find((s) => s[0] === name);
   }
 
   /* ---------------------------------- */
@@ -91,7 +93,7 @@ export class JSCStruct {
    * @param structName struct name
    * @returns class instance self
    */
-  decode(buffer: ArrayBuffer, structName: string = "default") {
+  decode(buffer: ArrayBuffer, structName?: string) {
     const struct =
       arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
 
@@ -151,6 +153,24 @@ export class JSCStruct {
 
     return this;
   }
+
+  /**
+   * Encode object to binary
+   * @param obj target object
+   * @param structName struct name
+   */
+  encode(obj: any, structName?: string) {
+    // get struct
+    const _struct =
+      arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
+    // for digital
+    // for digital array
+    // for string
+  }
+
+  /* ---------------------------------- */
+  /*               Output               */
+  /* ---------------------------------- */
 
   /**
    * Ouput decode data with json
