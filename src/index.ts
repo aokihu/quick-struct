@@ -21,6 +21,7 @@ export class JSCStruct {
   private _decodeFieldDataset: any[] = []; // decoed binary data
   private _structs: StructBlocks = []; // array to store binary parsed data
   private _littleEndian: boolean = true;
+  private _decodeLittleEndian: boolean = true;
 
   /* ---------------------------------- */
   /*             Constructor            */
@@ -66,6 +67,26 @@ export class JSCStruct {
   /*           Public methods           */
   /* ---------------------------------- */
 
+  /**
+   * Set big endian when decode binary
+   */
+  setBigEndian() {
+    this._decodeLittleEndian = false;
+  }
+
+  /**
+   * Set little endian when decode binary
+   */
+  setLittleEndian() {
+    this._decodeLittleEndian = true;
+  }
+
+  /**
+   * Decode binary to javascript data
+   * @param buffer binary data
+   * @param structName struct name
+   * @returns class instance self
+   */
   decode(buffer: ArrayBuffer, structName: string = "default") {
     const struct =
       arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
@@ -75,13 +96,12 @@ export class JSCStruct {
     /* local variable */
     let pos = 0;
     let offset = 0;
-    let idx = 0;
     let typeSize = 0;
     let buf: ArrayBuffer;
     let decodedValue: any;
 
     const tIdx = fields.length;
-    for (; idx < tIdx; idx += 1) {
+    for (let idx = 0; idx < tIdx; idx += 1) {
       const field = fields[idx];
       const _typeCode = field[1];
       const _fixedLength = field[2];
@@ -123,7 +143,7 @@ export class JSCStruct {
           break;
       }
 
-      this._decodeFieldDataset[idx] = decodedValue;
+      this._decodeFieldDataset.push(decodedValue);
     }
 
     return this;
