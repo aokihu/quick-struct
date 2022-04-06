@@ -113,10 +113,6 @@ export class JSCStruct {
       const _isArr: boolean = (_attr & 0x2) !== 0;
       const _isVar: boolean = (_attr & 0x4) !== 0;
 
-      /**
-       * ------ optimization ------
-       */
-
       // Get array length
       const _arrayLength = _isVar
         ? this._decodeFieldDataset[idx - 1]
@@ -129,18 +125,18 @@ export class JSCStruct {
 
       const byteLength = typeSize * _arrayLength;
       const dv: DataView = new DataView(buffer, pos, byteLength);
-      const getMethod: string = `get${CODE_TO_DV_TYPE[_typeCode]}`;
+      const gm: string = `get${CODE_TO_DV_TYPE[_typeCode]}`;
 
       switch (_attr) {
         case 0x0:
           // @ts-ignore
-          decodedValue = dv[getMethod](0, isLittleEndian);
+          decodedValue = dv[gm](0, isLittleEndian);
           break;
         case 0x2:
         case 0x6:
           decodedValue = [...Array(_arrayLength).keys()].map((v, i) =>
             // @ts-ignore
-            dv[getMethod](i * typeSize, isLittleEndian)
+            dv[gm](i * typeSize, isLittleEndian)
           );
           break;
         case 0x3:
