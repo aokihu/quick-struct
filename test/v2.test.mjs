@@ -4,6 +4,20 @@ import { JSCStruct } from '../build/index.js'
 describe("JSCStruct class test", () => {
 
     describe("Anonymous struct test", () => {
+        
+        it("Endiannes is same", () => {
+            const testNumber = new Uint8Array(new Uint16Array([1]).buffer)
+            const isLittleEndian = testNumber[0] === 1
+
+            const str = `
+                struct {
+                    u8 a;
+                }
+            `
+            const buf = new Uint8Array([16]).buffer
+            const struct = new JSCStruct(str);
+            assert.strictEqual(struct.isLittleEndian, isLittleEndian, 'Endiannes is different')
+        })
 
         it("uint8 element and equal 16", () => {
             const str = `

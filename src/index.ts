@@ -20,6 +20,7 @@ export class JSCStruct {
   private _fieldNames: string[] = []; // array to store key name
   private _decodeFieldDataset: any[] = []; // decoed binary data
   private _structs: StructBlocks = []; // array to store binary parsed data
+  private _littleEndian: boolean = true;
 
   /* ---------------------------------- */
   /*             Constructor            */
@@ -28,10 +29,13 @@ export class JSCStruct {
   constructor(rawString: string) {
     this._rawString = rawString;
     this._structs = compile(rawString);
-
     const defaultStruct = this.findStruct();
     const [_, fields] = defaultStruct!;
     this._fieldNames = fields.map((field) => field[0]);
+
+    // Check endianness
+    const testByte = new Uint8Array(new Uint16Array([1]).buffer);
+    this._littleEndian = testByte[0] === 1;
   }
 
   /* ---------------------------------- */
@@ -40,6 +44,22 @@ export class JSCStruct {
 
   findStruct(name: string = "default") {
     return this._structs.find((s) => s[0] === name);
+  }
+
+  /* ---------------------------------- */
+  /*        Public Get Properties       */
+  /* ---------------------------------- */
+
+  get isLittleEndian(): boolean {
+    return this._littleEndian;
+  }
+
+  get isBigEndian(): boolean {
+    return !this._littleEndian;
+  }
+
+  get endianness(): string {
+    return this._littleEndian ? "little" : "big";
   }
 
   /* ---------------------------------- */
