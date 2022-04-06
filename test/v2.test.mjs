@@ -11,7 +11,7 @@ describe("JSCStruct class test", () => {
                     u8 a;
                 }
             `
-            const buf = new Uint8Array([16])
+            const buf = new Uint8Array([16]).buffer
             const struct = new JSCStruct(str);
             const obj = struct.decode(buf).toJson();
             assert.strictEqual(obj.a, 16, 'first element is not equal 16')
@@ -23,7 +23,7 @@ describe("JSCStruct class test", () => {
                     i8 a;
                 }
             `
-            const buf = new Int8Array([-16])
+            const buf = new Int8Array([-16]).buffer
             const struct = new JSCStruct(str);
             const obj = struct.decode(buf).toJson();
             assert.strictEqual(obj.a, -16, 'first element is not equal -16')
@@ -35,7 +35,7 @@ describe("JSCStruct class test", () => {
                     u8 a;
                 }
             `
-            const buf = new Int8Array([-16])
+            const buf = new Int8Array([-16]).buffer
             const struct = new JSCStruct(str);
             const obj = struct.decode(buf).toJson();
             assert.notEqual(obj.a, -16, 'first element is not equal -16')
@@ -47,7 +47,7 @@ describe("JSCStruct class test", () => {
                     u16 a;
                 }
             `
-            const buf = new Uint16Array([3124])
+            const buf = new Uint16Array([3124]).buffer
             const struct = new JSCStruct(str);
             const obj = struct.decode(buf).toJson();
             assert.strictEqual(obj.a, 3124, 'first element is not equal 3124')
@@ -59,7 +59,7 @@ describe("JSCStruct class test", () => {
                     u32 a;
                 }
             `
-            const buf = new Uint32Array([593124])
+            const buf = new Uint32Array([593124]).buffer
             const struct = new JSCStruct(str);
             const obj = struct.decode(buf).toJson();
             assert.strictEqual(obj.a, 593124, 'first element is not equal 593124')
@@ -72,7 +72,7 @@ describe("JSCStruct class test", () => {
                 }
             `
 
-            const buf = new Uint8Array([15, 16, 17])
+            const buf = new Uint8Array([15, 16, 17]).buffer
             const struct = new JSCStruct(str)
             const obj = struct.decode(buf).toJson()
             assert.deepEqual(obj.a, [15, 16, 17], 'element is not a uin8 array')
@@ -85,7 +85,7 @@ describe("JSCStruct class test", () => {
                 }
             `
             const arr = [4566, 2331, 982]
-            const buf = new Uint16Array(arr)
+            const buf = new Uint16Array(arr).buffer
             const struct = new JSCStruct(str)
             const obj = struct.decode(buf).toJson()
             assert.deepEqual(obj.a, arr, 'element is not a uin32 array')
@@ -100,7 +100,7 @@ describe("JSCStruct class test", () => {
             `
 
             const arr = [90000, 120000, 34000000]
-            const buf = new Uint32Array(arr)
+            const buf = new Uint32Array(arr).buffer
             const struct = new JSCStruct(str)
             const obj = struct.decode(buf).toJson()
             assert.deepEqual(obj.a, arr, 'element is not a uin32 array')
@@ -114,7 +114,7 @@ describe("JSCStruct class test", () => {
                 }
             `
 
-            const buf = Uint8Array.from("hello".split('').map(w => w.charCodeAt(0)))
+            const buf = Uint8Array.from("hello".split('').map(w => w.charCodeAt(0))).buffer
             const struct = new JSCStruct(str)
             const obj = struct.decode(buf).toJson();
             assert.deepEqual(obj.a, 'hello', 'string is not "hello"')
@@ -132,7 +132,7 @@ describe("JSCStruct class test", () => {
             `
 
             const arr = [3, 4, 5, 6]
-            const buf = new Uint8Array(arr)
+            const buf = new Uint8Array(arr).buffer
             const struct = new JSCStruct(str)
             const obj = struct.decode(buf).toJson()
             assert.strictEqual(obj.a, 3, 'size is not 3')
@@ -151,7 +151,7 @@ describe("JSCStruct class test", () => {
             `
             const text = "hello"
             const arr = [text.length, ...(new TextEncoder()).encode(text)]
-            const buf = new Uint8Array(arr)
+            const buf = new Uint8Array(arr).buffer
             const struct = new JSCStruct(str)
             const obj = struct.decode(buf).toJson()
             assert.strictEqual(obj.a, text.length, `size is not ${text.length}`)
@@ -181,7 +181,7 @@ describe("JSCStruct class test", () => {
                 ...(new TextEncoder()).encode(address)
             ]
 
-            const buf = new Uint8Array(arr)
+            const buf = new Uint8Array(arr).buffer
             const struct = new JSCStruct(str)
             const obj = struct.decode(buf).toJson()
             assert.strictEqual(obj.index, index, `index is not ${index}`)
