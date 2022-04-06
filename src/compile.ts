@@ -54,8 +54,8 @@ export type StructBlockRecordArray = Array<StructBlockRecord>
 
 export interface FieldRecord {
     [0]: number     // Field type code
-    [1]: number     // Bytes length, default is 0, variable length it will be -1
-    [2]: number     // Attribute
+    [1]: number     // Attribute
+    [2]: number     // Bytes length OR Index of field for variable length
 }
 
 export type FieldRecordArray = Array<FieldRecord>
@@ -115,7 +115,7 @@ export const parseAttribute = (
     if (length === undefined && typeCode < 20) { return 0x0 }
 
     if (length !== undefined) {
-        if (length !== '') {
+        if (!length.startsWith('$')) {
             if (typeCode < 20) { return 0x2 }
             if (typeCode >= 20 && typeCode <= 22) { return 0x3 }
         } else {
@@ -125,6 +125,22 @@ export const parseAttribute = (
     }
 
     return 0;
+}
+
+export const parseArrayLength = (length: string | undefined, names: string[]) => {
+    if (length === undefined) {
+        return 0
+    } else {
+        if (length.startsWith('$')) {
+            // Variable length
+            const name = length.substring(1)
+            const idx = names.findIndex(n => n === name)
+            return idx;
+        } else {
+            // Fixed length
+            return Number(length)
+        }
+    }
 }
 
 /**
@@ -150,20 +166,22 @@ export const parseAttribute = (
  * ]
  */
 export const parseBody = (body: string) => {
-    const regexp = /(u8|i8|u16|i16|u32|i32|u64|i64|f32|f64|char|uchar|string)(\w+)(?:\[(\d*)\])?;??/g
+    const regexp = /(u8|i8|u16|i16|u32|i32|u64|i64|f32|f64|char|uchar|string)(\w+)(?:\[(\$\w*|\d*)\])?;??/g
 
     const fieldNames: string[] = []
     const fieldDetails: FieldRecordArray = []
     let result;
 
     while ((result = regexp.exec(body)) !== null) {
+        // get result from regexp
         let [_type, _name, _length] = result.slice(1)
 
         const _typeCode: number = TYPE_TO_CODE[_type]
-        let _len = _length ? Number(_length) : 0
         const _attribute = parseAttribute(_typeCode, _length);
+        const _len = parseArrayLength(_length, fieldNames);
+
         fieldNames.push(_name)
-        fieldDetails.push([_typeCode, _attribute, _len,])
+        fieldDetails.push([_typeCode, _attribute, _len])
     }
     return [fieldNames, fieldDetails];
 }

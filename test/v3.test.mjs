@@ -17,4 +17,21 @@ describe("String template testcase", () => {
 
     })
 
+    it("variable length string", () => {
+
+        const struct = qs`
+            struct {
+                u8 len;
+              char message[$len];
+            }
+        `
+
+        const message = "hello world!"
+        const buffer = new Uint8Array([message.length, ...(new TextEncoder).encode(message)]).buffer
+        const result = struct.decode(buffer).toJSON()
+        assert.strictEqual(result.len, message.length, `len is not ${message.length}`)
+        assert.deepEqual(result.message, message, `message is not "${message}"`)
+
+    })
+
 })

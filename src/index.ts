@@ -111,15 +111,15 @@ export class JSCStruct {
       const field = fields[idx];
       const _typeCode = field[0];
       const _attr = field[1];
-      const _fixedLength = field[2];
+      const _lenOrIdx = field[2];
       const _isArr: boolean = (_attr & 0x2) !== 0;
       const _isVar: boolean = (_attr & 0x4) !== 0;
 
       // Get array length
       const _arrayLength = _isVar
-        ? this._decodeFieldDataset[idx - 1]
+        ? this._decodeFieldDataset[_lenOrIdx]
         : _isArr
-          ? _fixedLength
+          ? _lenOrIdx
           : 1;
 
       typeSize = CODE_TO_BYTE_SIZE[_typeCode];

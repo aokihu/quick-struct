@@ -103,8 +103,6 @@ describe("Test compile() method", () => {
         const fieldNames = fields[0]
         const fieldDetails = fields[1]
 
-        console.log(fieldDetails)
-
         assert.equal(structs.length, 1, 'result set length is not 1')
         assert.equal(structName, 'default', 'the name is not "default"')
         assert.equal(fieldDetails[0][0], 20, 'the type is not "char"')

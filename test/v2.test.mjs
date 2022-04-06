@@ -4,7 +4,7 @@ import { JSCStruct } from '../build/index.js'
 describe("JSCStruct class test", () => {
 
     describe("Anonymous struct test", () => {
-        
+
         it("Endiannes is same", () => {
             const testNumber = new Uint8Array(new Uint16Array([1]).buffer)
             const isLittleEndian = testNumber[0] === 1
@@ -141,7 +141,7 @@ describe("JSCStruct class test", () => {
             const str = `
                 struct {
                     u8 a;
-                    u8 b[];
+                    u8 b[$a];
                 }
             `
 
@@ -160,7 +160,7 @@ describe("JSCStruct class test", () => {
             const str = `
                 struct {
                     u8 a;
-                    char b[];
+                    char b[$a];
                 }
             `
             const text = "hello"
@@ -178,9 +178,9 @@ describe("JSCStruct class test", () => {
                 struct {
                     u8 index;
                     u8 phone_size;
-                    char phone[]
+                    char phone[$phone_size]
                     u8 address_size;
-                    char address[];
+                    char address[$address_size];
                 }
             `
 
