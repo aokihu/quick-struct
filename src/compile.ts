@@ -137,11 +137,11 @@ export const parseAttribute = (
  *   [
  *      structName: string, 
  *      [
+ *          [fieldNames: string,...],
  *          [
- *              field_name: string, 
- *              type_code: number, 
- *              byte_length: number,
+ *              type_code: number,
  *              attribute: number,
+ *              byte_length: number,
  *          ],
  *          ...
  *      ]
@@ -163,7 +163,7 @@ export const parseBody = (body: string) => {
         let _len = _length ? Number(_length) : 0
         const _attribute = parseAttribute(_typeCode, _length);
         fieldNames.push(_name)
-        fieldDetails.push([_typeCode, _len, _attribute])
+        fieldDetails.push([_typeCode, _attribute, _len,])
     }
     return [fieldNames, fieldDetails];
 }

@@ -110,8 +110,8 @@ export class JSCStruct {
     for (let idx = 0; idx < tIdx; idx += 1) {
       const field = fields[idx];
       const _typeCode = field[0];
-      const _fixedLength = field[1];
-      const _attr = field[2];
+      const _attr = field[1];
+      const _fixedLength = field[2];
       const _isArr: boolean = (_attr & 0x2) !== 0;
       const _isVar: boolean = (_attr & 0x4) !== 0;
 

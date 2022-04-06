@@ -109,6 +109,6 @@ describe("Test compile() method", () => {
         assert.equal(structName, 'default', 'the name is not "default"')
         assert.equal(fieldDetails[0][0], 20, 'the type is not "char"')
         assert.equal(fieldNames[0], 'name', 'the name is not "name"')
-        assert.equal(fieldDetails[0][1], 16, 'the length is not 16')
+        assert.equal(fieldDetails[0][2], 16, 'the length is not 16')
     })
 })
