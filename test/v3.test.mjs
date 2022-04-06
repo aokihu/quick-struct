@@ -17,17 +17,18 @@ describe("String template testcase", () => {
 
     })
 
-    it("variable length string", () => {
+    it("long range variable length string", () => {
 
         const struct = qs`
             struct {
                 u8 len;
+               u16 b;
               char message[$len];
             }
         `
 
         const message = "hello world!"
-        const buffer = new Uint8Array([message.length, ...(new TextEncoder).encode(message)]).buffer
+        const buffer = new Uint8Array([message.length, 0x0, 0x1, ...(new TextEncoder).encode(message)]).buffer
         const result = struct.decode(buffer).toJSON()
         assert.strictEqual(result.len, message.length, `len is not ${message.length}`)
         assert.deepEqual(result.message, message, `message is not "${message}"`)
