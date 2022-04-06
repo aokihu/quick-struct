@@ -1,6 +1,6 @@
 # quick-struct
 
-Version 0.3.1
+Version 0.3.2
 
 **quick-struct** is the tools for parsing and unpacking binary data formats into data formats that JavaScript can easily handle. The developer can define the data format using a string definition similar to the C language style. In order to eliminate the defect of inconsistent byte length between different CPU architectures and operating systems, the data type keyword of the **Rust** language is used to define the data type.
 
@@ -178,7 +178,7 @@ console.log(result.b) // "hello"
 
 ### Endianness
 
-**quick-struct **uses DataView for binary data parsing. The input binary is in big-endian mode, which is no problem for network communication, but the computers we use are usually in little-endian mode. We can parse by setting the endianness mode. binary data in little endian mode. Default mode is big-endian, so you don't need change it normaly.
+**quick-struct** uses DataView for binary data parsing. The input binary is in big-endian mode, which is no problem for network communication, but the computers we use are usually in little-endian mode. We can parse by setting the endianness mode. binary data in little endian mode. Default mode is big-endian, so you don't need change it normaly.
 
 ```javascript
 import { qs } from 'quick-struct'
@@ -204,8 +204,6 @@ const result = struci.setBigEndian().decode(buffer).toJson()
 console.log(result.a) // [12, 13, 14]
 console.log(result.b) // "hello"
 ```
-
-
 
 ## API
 
