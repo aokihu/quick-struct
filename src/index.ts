@@ -36,7 +36,7 @@ export class JSCStruct {
     this._structs = compile(rawString);
     const defaultStruct = this.findStruct();
     const [_, fields] = defaultStruct!;
-    this._fieldNames = fields.map((field) => field[0]);
+    this._fieldNames = fields[0];
 
     // Check endianness
     const testByte = new Uint8Array(new Uint16Array([1]).buffer);
@@ -97,7 +97,7 @@ export class JSCStruct {
     const struct =
       arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
 
-    const fields = struct![1];
+    const fields = struct![1][1];
 
     /* local variable */
     let pos = 0;
@@ -109,9 +109,9 @@ export class JSCStruct {
     const tIdx = fields.length;
     for (let idx = 0; idx < tIdx; idx += 1) {
       const field = fields[idx];
-      const _typeCode = field[1];
-      const _fixedLength = field[2];
-      const _attr = field[3];
+      const _typeCode = field[0];
+      const _fixedLength = field[1];
+      const _attr = field[2];
       const _isArr: boolean = (_attr & 0x2) !== 0;
       const _isVar: boolean = (_attr & 0x4) !== 0;
 
@@ -119,8 +119,8 @@ export class JSCStruct {
       const _arrayLength = _isVar
         ? this._decodeFieldDataset[idx - 1]
         : _isArr
-        ? _fixedLength
-        : 1;
+          ? _fixedLength
+          : 1;
 
       typeSize = CODE_TO_BYTE_SIZE[_typeCode];
       offset = pos + typeSize * _arrayLength;

@@ -43,7 +43,7 @@ import { TYPE_TO_CODE } from "./types_map"
 /*            Type declare            */
 /* ---------------------------------- */
 
-export type StructBlocks = Array<[string, FieldRecordArray]>
+export type StructBlocks = Array<[string, [string[], FieldRecordArray]]>
 
 export interface StructBlockRecord {
     [0]: string     // struct name
@@ -53,10 +53,9 @@ export interface StructBlockRecord {
 export type StructBlockRecordArray = Array<StructBlockRecord>
 
 export interface FieldRecord {
-    [0]: string     // Field name
-    [1]: number     // Field type code
-    [2]: number     // Bytes length, default is 0, variable length it will be -1
-    [3]: number     // Attribute
+    [0]: number     // Field type code
+    [1]: number     // Bytes length, default is 0, variable length it will be -1
+    [2]: number     // Attribute
 }
 
 export type FieldRecordArray = Array<FieldRecord>
@@ -153,7 +152,8 @@ export const parseAttribute = (
 export const parseBody = (body: string) => {
     const regexp = /(u8|i8|u16|i16|u32|i32|u64|i64|f32|f64|char|uchar|string)(\w+)(?:\[(\d*)\])?;??/g
 
-    const rows: FieldRecordArray = []
+    const fieldNames: string[] = []
+    const fieldDetails: FieldRecordArray = []
     let result;
 
     while ((result = regexp.exec(body)) !== null) {
@@ -162,9 +162,10 @@ export const parseBody = (body: string) => {
         const _typeCode: number = TYPE_TO_CODE[_type]
         let _len = _length ? Number(_length) : 0
         const _attribute = parseAttribute(_typeCode, _length);
-        rows.push([_name, _typeCode, _len, _attribute])
+        fieldNames.push(_name)
+        fieldDetails.push([_typeCode, _len, _attribute])
     }
-    return rows;
+    return [fieldNames, fieldDetails];
 }
 
 /**
@@ -176,7 +177,7 @@ export const compile = (descriptor: string) => {
     return blocks.map((b) => {
         const _structName = b[0]
         const _body = b[1]
-        const _rows = parseBody(_body)
-        return [_structName, _rows]
+        const [_names, _details] = parseBody(_body)
+        return [_structName, [_names, _details]]
     }) as StructBlocks
 }

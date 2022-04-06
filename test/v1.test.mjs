@@ -74,13 +74,19 @@ describe("Test compile() method", () => {
         `
 
         const structs = compile(str);
-        const row1 = structs[0]
+        const struct = structs[0]
+
+        const structName = struct[0]
+        const fields = struct[1]
+        const fieldNames = fields[0]
+        const fieldDetails = fields[1]
+
         assert.equal(structs.length, 1, 'result set length is not 1')
-        assert.equal(row1[0], 'default', 'the name is not "default"')
-        assert.equal(row1[1][0][1], 10, 'the type is not "u8"')
-        assert.equal(row1[1][0][0], 'a', 'the name is not "a"')
-        assert.equal(row1[1][1][1], 12, 'the type is not "u16"')
-        assert.equal(row1[1][1][0], 'c_1', 'the name is not "c_1"')
+        assert.equal(structName, 'default', 'the name is not "default"')
+        assert.equal(fieldDetails[0][0], 10, 'the type is not "u8"')
+        assert.equal(fieldNames[0], 'a', 'the name is not "a"')
+        assert.equal(fieldDetails[1][0], 12, 'the type is not "u16"')
+        assert.equal(fieldNames[1], 'c_1', 'the name is not "c_1"')
     })
 
     it("compile() test, char type", () => {
@@ -91,11 +97,18 @@ describe("Test compile() method", () => {
         `
 
         const structs = compile(str);
-        const row1 = structs[0]
+        const struct = structs[0]
+        const structName = struct[0]
+        const fields = struct[1]
+        const fieldNames = fields[0]
+        const fieldDetails = fields[1]
+
+        console.log(fieldDetails)
+
         assert.equal(structs.length, 1, 'result set length is not 1')
-        assert.equal(row1[0], 'default', 'the name is not "default"')
-        assert.equal(row1[1][0][1], 20, 'the type is not "char"')
-        assert.equal(row1[1][0][0], 'name', 'the name is not "name"')
-        assert.equal(row1[1][0][2], 16, 'the name is not 16')
+        assert.equal(structName, 'default', 'the name is not "default"')
+        assert.equal(fieldDetails[0][0], 20, 'the type is not "char"')
+        assert.equal(fieldNames[0], 'name', 'the name is not "name"')
+        assert.equal(fieldDetails[0][1], 16, 'the length is not 16')
     })
 })
