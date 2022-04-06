@@ -75,16 +75,20 @@ export class JSCStruct {
 
   /**
    * Set big endian when decode binary
+   * @returns class instance self
    */
   setBigEndian() {
     this._decodeLittleEndian = false;
+    return this
   }
 
   /**
    * Set little endian when decode binary
+   * @returns class instance self
    */
   setLittleEndian() {
     this._decodeLittleEndian = true;
+    return this;
   }
 
   /**
@@ -104,7 +108,7 @@ export class JSCStruct {
     let offset = 0;
     let typeSize = 0;
     let decodedValue: any;
-    const isLittleEndian = this._littleEndian;
+    const isLittleEndian = this._decodeLittleEndian;
 
     const tIdx = fields.length;
     for (let idx = 0; idx < tIdx; idx += 1) {
