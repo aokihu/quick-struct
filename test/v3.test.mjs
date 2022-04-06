@@ -11,7 +11,7 @@ describe("String template testcase", () => {
             }
         `
 
-        const buffer = new Uint8Array([16]);
+        const buffer = new Uint8Array([16]).buffer;
         const result = struct.decode(buffer).toJSON()
         assert.strictEqual(result.a, 16, 'a is not 16')
 

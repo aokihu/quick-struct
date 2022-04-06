@@ -59,6 +59,32 @@ export const CODE_TO_TYPE: ICODE_TO_TYPE = [
   "struct",
 ];
 
+export const CODE_TO_DV_TYPE = [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  "Uint8",
+  "Int8",
+  "Uint16",
+  "Int16",
+  "Uint32",
+  "Int32",
+  "BigUint64",
+  "BigInt64",
+  "Float32",
+  "Float64",
+  "Uint8",
+  "Uint8",
+  "Uint8",
+];
+
 export interface ICODE_TO_TYPEVIEW {
   [idx: number]:
     | number

@@ -12,7 +12,7 @@ console.time("construct")
 let struct = new JSCStruct(StructString)
 console.timeEnd("construct")
 
-const testU8 = new Uint8Array([12])
+const testU8 = new Uint8Array([12]).buffer
 
 console.time("100-u8-value")
 for (let i = 0; i < 100; i += 1) {

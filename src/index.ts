@@ -9,7 +9,11 @@
  */
 import type { StructBlocks } from "./compile";
 import { compile } from "./compile";
-import { CODE_TO_BYTE_SIZE, CODE_TO_TYPEVIEW } from "./types_map";
+import {
+  CODE_TO_BYTE_SIZE,
+  CODE_TO_DV_TYPE,
+  CODE_TO_TYPEVIEW,
+} from "./types_map";
 
 export class JSCStruct {
   /* ---------------------------------- */
@@ -97,8 +101,8 @@ export class JSCStruct {
     let pos = 0;
     let offset = 0;
     let typeSize = 0;
-    let buf: ArrayBuffer;
     let decodedValue: any;
+    const isLittleEndian = this._littleEndian;
 
     const tIdx = fields.length;
     for (let idx = 0; idx < tIdx; idx += 1) {
@@ -122,27 +126,30 @@ export class JSCStruct {
 
       typeSize = CODE_TO_BYTE_SIZE[_typeCode];
       offset = pos + typeSize * _arrayLength;
-      buf = buffer.slice(pos, offset);
-      pos = offset;
 
-      // decode
-      // @ts-ignore
-      const _decode = new CODE_TO_TYPEVIEW[_typeCode](buf);
+      const byteLength = typeSize * _arrayLength;
+      const dv: DataView = new DataView(buffer, pos, byteLength);
+      const getMethod: string = `get${CODE_TO_DV_TYPE[_typeCode]}`;
 
       switch (_attr) {
         case 0x0:
-          decodedValue = _decode[0];
+          // @ts-ignore
+          decodedValue = dv[getMethod](0, isLittleEndian);
           break;
         case 0x2:
         case 0x6:
-          decodedValue = Array.from(_decode);
+          decodedValue = [...Array(_arrayLength).keys()].map((v, i) =>
+            // @ts-ignore
+            dv[getMethod](i * typeSize, isLittleEndian)
+          );
           break;
         case 0x3:
         case 0x7:
-          decodedValue = new TextDecoder().decode(_decode);
+          decodedValue = new TextDecoder().decode(buffer.slice(pos, offset));
           break;
       }
 
+      pos = offset;
       this._decodeFieldDataset.push(decodedValue);
     }
 
