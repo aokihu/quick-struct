@@ -80,19 +80,13 @@ export class JSCStruct {
         ? _fixedLength
         : 1;
 
-      // Get type size
       typeSize = CODE_TO_BYTE_SIZE[_typeCode];
-
-      // Calculate offset
       offset = pos + typeSize * _arrayLength;
-
-      // Slice buffer
       buf = buffer.slice(pos, offset);
-
-      // Move 'pos' to next position
       pos = offset;
 
       // decode
+      // @ts-ignore
       const _decode = new CODE_TO_TYPEVIEW[_typeCode](buf);
 
       switch (_attr) {
