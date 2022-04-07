@@ -79,7 +79,7 @@ export class JSCStruct {
    */
   setBigEndian() {
     this._decodeLittleEndian = false;
-    return this
+    return this;
   }
 
   /**
@@ -123,8 +123,8 @@ export class JSCStruct {
       const _arrayLength = _isVar
         ? this._decodeFieldDataset[_lenOrIdx]
         : _isArr
-          ? _lenOrIdx
-          : 1;
+        ? _lenOrIdx
+        : 1;
 
       typeSize = CODE_TO_BYTE_SIZE[_typeCode];
       offset = pos + typeSize * _arrayLength;
