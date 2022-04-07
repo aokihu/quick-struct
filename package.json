@@ -18,14 +18,14 @@
     "decode"
   ],
   "description": "this is library convert binary to javascript object, it's easy to write struct description, it is like C-style struct",
-  "homepage": "https://github.com/aokihu/js-cstruct",
+  "homepage": "https://github.com/aokihu/quick-struct",
   "maintainers": [
     "aokihu@gmail.com"
   ],
   "publisher": "aokihu@gmail.com",
   "bugs": {
     "email": "aokihu@gmail.com",
-    "url": "https://github.com/aokihu/js-cstruct/issues"
+    "url": "https://github.com/aokihu/quick-struct/issues"
   },
   "scripts": {
     "prepack": "yarn build",
