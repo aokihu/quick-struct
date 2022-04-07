@@ -9,11 +9,8 @@
  */
 import type { StructBlocks } from "./compile";
 import { compile } from "./compile";
-import {
-  CODE_TO_BYTE_SIZE,
-  CODE_TO_DV_TYPE,
-  CODE_TO_TYPEVIEW,
-} from "./types_map";
+import { convertToBuffer } from "./encode";
+import { CODE_TO_BYTE_SIZE, CODE_TO_DV_TYPE } from "./types_map";
 
 export class JSCStruct {
   /* ---------------------------------- */
@@ -110,6 +107,7 @@ export class JSCStruct {
     let decodedValue: any;
     const isLittleEndian = this._decodeLittleEndian;
 
+    /* Loop */
     const tIdx = fields.length;
     for (let idx = 0; idx < tIdx; idx += 1) {
       const field = fields[idx];
@@ -167,9 +165,49 @@ export class JSCStruct {
     // get struct
     const _struct =
       arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
-    // for digital
-    // for digital array
-    // for string
+    const [_, [_fNames, _fDetails]] = _struct!;
+
+    // Object key names
+    const _keys = Object.keys(obj);
+
+    /* Loop */
+    const tmp: any = {};
+    let totalByteLength = 0;
+    for (let _k of _keys) {
+      const _v = obj[_k];
+      let _fIdx = _fNames.findIndex((n) => n === _k);
+      let _fDetail = _fDetails[_fIdx];
+      const _result = Object.freeze(convertToBuffer(_k, _v, _fDetail));
+
+      tmp[_k] = { buffer: _result.buffer };
+      totalByteLength += _result.buffer.byteLength;
+
+      /* Put byte length to placeholder field */
+      let idx;
+      if ((idx = _result.placeholderIndex) !== undefined) {
+        let _name = _fNames[idx];
+        _fDetail = _fDetails[idx];
+        const _resultPlaceholder = Object.freeze(
+          convertToBuffer(_name, _result.buffer.byteLength, _fDetail)
+        );
+
+        tmp[_name] = { buffer: _resultPlaceholder.buffer };
+        totalByteLength += _resultPlaceholder.buffer.byteLength;
+      }
+    }
+
+    /* new buffer to output */
+    const output = new Uint8Array(totalByteLength);
+
+    let offset = 0;
+    for (let _name of _fNames) {
+      const { buffer } = tmp[_name];
+      const _uintArr = new Uint8Array(buffer);
+      output.set(_uintArr, offset);
+      offset += buffer.byteLength;
+    }
+
+    return output.buffer;
   }
 
   /* ---------------------------------- */
@@ -181,9 +219,11 @@ export class JSCStruct {
    * @returns Decode binary data
    */
   toJson = () =>
-    this._fieldNames.reduce((T, name, idx) => {
-      return { ...T, [name]: this._decodeFieldDataset[idx] };
-    }, {});
+    Object.freeze(
+      this._fieldNames.reduce((T, name, idx) => {
+        return { ...T, [name]: this._decodeFieldDataset[idx] };
+      }, {})
+    );
 
   /**
    * a.k.a toJson()

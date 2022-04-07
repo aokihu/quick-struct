@@ -30,7 +30,7 @@
   "scripts": {
     "prepack": "yarn build",
     "build": "npx esbuild src/index.ts --minify --bundle --platform=node --target=node16 --outfile=build/index.js",
-    "pretest": "yarn build",
+    "pretest": "npx esbuild src/index.ts --sourcemap --bundle --platform=node --target=node16 --outfile=build/index.js ",
     "test": "npx mocha",
     "bench": "yarn build && node benchmark/index.mjs"
   },
