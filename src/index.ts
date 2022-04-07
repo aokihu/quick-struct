@@ -12,7 +12,7 @@ import { compile } from "./compile";
 import { convertToBuffer } from "./encode";
 import { CODE_TO_BYTE_SIZE, CODE_TO_DV_TYPE } from "./types_map";
 
-export class JSCStruct {
+export class QStruct {
   /* ---------------------------------- */
   /*             Properties             */
   /* ---------------------------------- */
@@ -121,8 +121,8 @@ export class JSCStruct {
       const _arrayLength = _isVar
         ? this._decodeFieldDataset[_lenOrIdx]
         : _isArr
-        ? _lenOrIdx
-        : 1;
+          ? _lenOrIdx
+          : 1;
 
       typeSize = CODE_TO_BYTE_SIZE[_typeCode];
       offset = pos + typeSize * _arrayLength;
@@ -239,5 +239,5 @@ export class JSCStruct {
  *
  */
 export function qs(sds: TemplateStringsArray) {
-  return new JSCStruct(sds.raw[0]);
+  return new QStruct(sds.raw[0]);
 }

@@ -1,7 +1,7 @@
 {
   "name": "quick-struct",
   "types": "types",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "main": "build/index.js",
   "author": "aokihu <aokihu@gmail.com>",
   "license": "MIT",
@@ -31,9 +31,9 @@
     "url": "https://github.com/aokihu/quick-struct/issues"
   },
   "scripts": {
-    "prepack": "yarn build",
+    "prepack": "rm -rf build && yarn build",
     "build": "npx esbuild src/index.ts --minify --bundle --platform=node --target=node16 --outfile=build/index.js",
-    "pretest": "npx esbuild src/index.ts --sourcemap --bundle --platform=node --target=node16 --outfile=build/index.js ",
+    "pretest": "npx tsc && npx esbuild src/index.ts --sourcemap --bundle --platform=node --target=node16 --outfile=build/index.js ",
     "test": "npx mocha",
     "bench": "yarn build && node benchmark/index.mjs"
   },

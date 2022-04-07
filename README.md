@@ -47,7 +47,7 @@ npm install quick-struct
 
 ### Basic
 
-You can use `qs` template string function to create a new `JSCStruct` instance.
+You can use `qs` template string function to create a new `QStruct` instance.
 
 ```javascript
 import { qs } from "quick-struct";
@@ -68,10 +68,10 @@ const result = struct.decode(buffer).toJson();
 console.log(result.a);
 ```
 
-You can also use `JSSctruct` to create instance. Becase this is library is called **"js-cstruct"** before, so the calss name is **"JSCStruct"**. Two ways is the same, but I'd like template string function version.
+You can also use `JSSctruct` to create instance. Becase this is library is called **"js-cstruct"** before, so the calss name is **"QStruct"**. Two ways is the same, but I'd like template string function version.
 
 ```javascript
-import { JSCStruct } from "quick-struct";
+import { QStruct } from "quick-struct";
 
 const structDescriptor = `
     struct {
@@ -79,7 +79,7 @@ const structDescriptor = `
     }
 `;
 
-const struct = new JSCStruct(structDescriptor);
+const struct = new QStruct(structDescriptor);
 
 // Create a UInt8 array
 const buffer = new UInt8Aray([12]);
@@ -207,10 +207,10 @@ console.log(result.b); // "hello"
 
 ## API
 
-`qs` template string function, it return a new **JSCStruct**
+`qs` template string function, it return a new **QStruct**
 
-`JSCStruct(structDescriptor: string)` Constructor, the parameter is the structure description string
+`QStruct(structDescriptor: string)` Constructor, the parameter is the structure description string
 
-`JSCStruct.prototype.decode(buffer: ArrayBuffer)` Decode binary array data and store result in memory
+`QStruct.prototype.decode(buffer: ArrayBuffer)` Decode binary array data and store result in memory
 
-`JSCStruct.prototype.toJson()` Ouptu the result with JSON type, you can use `toJSON()`, it's a.k.a. `toJson()`
+`QStruct.prototype.toJson()` Ouptu the result with JSON type, you can use `toJSON()`, it's a.k.a. `toJson()`
