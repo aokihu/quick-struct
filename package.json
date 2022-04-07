@@ -1,7 +1,7 @@
 {
   "name": "quick-struct",
   "types": "types",
-  "version": "0.3.2",
+  "version": "0.3.4",
   "main": "build/index.js",
   "author": "aokihu <aokihu@gmail.com>",
   "license": "MIT",
@@ -21,27 +21,27 @@
     "endianness"
   ],
   "description": "this is library convert binary to javascript object, it's easy to write struct description, it is like C-style struct",
-  "homepage": "https://github.com/aokihu/js-cstruct",
+  "homepage": "https://github.com/aokihu/quick-struct",
   "maintainers": [
     "aokihu@gmail.com"
   ],
   "publisher": "aokihu@gmail.com",
   "bugs": {
     "email": "aokihu@gmail.com",
-    "url": "https://github.com/aokihu/js-cstruct/issues"
+    "url": "https://github.com/aokihu/quick-struct/issues"
   },
   "scripts": {
-    "build": "npx tsc",
-    "pretest": "npx tsc",
+    "prepack": "yarn build",
+    "build": "npx esbuild src/index.ts --minify --bundle --platform=node --target=node16 --outfile=build/index.js",
+    "pretest": "npx esbuild src/index.ts --sourcemap --bundle --platform=node --target=node16 --outfile=build/index.js ",
     "test": "npx mocha",
-    "bench": "npx tsc && node benchmark/index.mjs"
+    "bench": "yarn build && node benchmark/index.mjs"
   },
   "devDependencies": {
     "@types/node": "^17.0.23",
+    "esbuild": "^0.14.32",
     "mocha": "^9.2.2",
     "ts-loader": "^9.2.8",
-    "typescript": "^4.6.3",
-    "webpack": "^5.71.0",
-    "webpack-cli": "^4.9.2"
+    "typescript": "^4.6.3"
   }
 }

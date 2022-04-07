@@ -1,5 +1,6 @@
 import assert from 'assert'
-import { JSCStruct } from '../build/index.js'
+import pkg from '../build/index.js'
+const {JSCStruct} = pkg
 
 describe("JSCStruct class test", () => {
 

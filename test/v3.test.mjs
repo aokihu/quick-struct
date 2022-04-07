@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { qs } from '../build/index.js'
+import {qs} from '../build/index.js'
 
 describe("String template testcase", () => {
 
