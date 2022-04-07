@@ -1,7 +1,7 @@
 {
   "name": "quick-struct",
   "types": "types",
-  "version": "0.3.1",
+  "version": "0.3.3",
   "main": "build/index.js",
   "author": "aokihu <aokihu@gmail.com>",
   "license": "MIT",
@@ -28,10 +28,9 @@
     "url": "https://github.com/aokihu/js-cstruct/issues"
   },
   "scripts": {
-    "prepack": "npx tsc",
-    "build": "npx tsc",
-    "dist": "npx esbuild src/index.ts --outfile=main.js",
-    "pretest": "npx tsc",
+    "prepack": "yarn build",
+    "build": "npx esbuild src/index.ts --minify --bundle --platform=node --target=node16 --outfile=build/index.js",
+    "pretest": "yarn build",
     "test": "npx mocha",
     "bench": "npx tsc && node benchmark/index.mjs"
   },
