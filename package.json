@@ -1,7 +1,7 @@
 {
   "name": "quick-struct",
   "types": "types",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "main": "build/index.js",
   "author": "aokihu <aokihu@gmail.com>",
   "license": "MIT",

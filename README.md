@@ -1,6 +1,6 @@
 # quick-struct
 
-Version 0.3.6
+Version 0.3.7
 
 **quick-struct** is the tools for parsing and unpacking binary data formats into data formats that JavaScript can easily handle. The developer can define the data format using a string definition similar to the C language style. In order to eliminate the defect of inconsistent byte length between different CPU architectures and operating systems, the data type keyword of the **Rust** language is used to define the data type.
 
