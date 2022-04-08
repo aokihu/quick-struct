@@ -1,3 +1,5 @@
+![quick-struct banner](/Volumes/Data/Projects/js-cstruct/banner.jpg)
+
 # quick-struct
 
 **quick-struct** is the tools for parsing and unpacking binary data formats into data formats that JavaScript can easily handle. The developer can define the data format using a string definition similar to the C language style. In order to eliminate the defect of inconsistent byte length between different CPU architectures and operating systems, the data type keyword of the **Rust** language is used to define the data type.
@@ -17,16 +19,16 @@ It's very easy, **u8** is an unsigned byte(8 bit) and **u16** is 2 unsinged byte
 Type and byte length
 
 | Byte length  | signed | unsigned | Support |
-| :----------: | :----: | :------: | :-----: |
-|    8-bit     |   i8   |    u8    |   Yes   |
-|    16-bit    |  i16   |   u16    |   Yes   |
-|    32-bit    |  i32   |   u32    |   Yes   |
-|    64-bit    |  i64   |   u64    |   No    |
-|   128-bit    |  i128  |   u128   |   No    |
-|     arch     | isize  |  usize   |   No    |
-| float-32-bit |  f32   |    -     |   Yes   |
-| float-64-bit |  f64   |    -     |   Yes   |
-|    8-bit     |  char  |  uchar   |   Yes   |
+|:------------:|:------:|:--------:|:-------:|
+| 8-bit        | i8     | u8       | Yes     |
+| 16-bit       | i16    | u16      | Yes     |
+| 32-bit       | i32    | u32      | Yes     |
+| 64-bit       | i64    | u64      | No      |
+| 128-bit      | i128   | u128     | No      |
+| arch         | isize  | usize    | No      |
+| float-32-bit | f32    | -        | Yes     |
+| float-64-bit | f64    | -        | Yes     |
+| 8-bit        | char   | uchar    | Yes     |
 
 Because JavaScript's support for 64-bit bytes is not perfect, it cannot support 64-bit data format well for the time being, and will improve the support for 64-bit data in the future.
 
