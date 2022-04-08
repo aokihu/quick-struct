@@ -31,7 +31,7 @@
     "url": "https://github.com/aokihu/quick-struct/issues"
   },
   "scripts": {
-    "prepublish": "rm -f build && yarn build",
+    "prepublish": "rm -f build && yarn build && npx tsc --emitDeclarationOnly --outDir build",
     "prepack": "rm -rf build && yarn build",
     "build": "npx esbuild src/index.ts --minify --bundle --platform=node --target=node16 --outfile=build/index.js",
     "pretest": "npx tsc && npx esbuild src/index.ts --sourcemap --bundle --platform=node --target=node16 --outfile=build/index.js ",
