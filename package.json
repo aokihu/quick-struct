@@ -1,6 +1,6 @@
 {
   "name": "quick-struct",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "main": "./build/index.js",
   "types": "./types/index.d.ts",
   "author": "aokihu <aokihu@gmail.com>",
@@ -8,6 +8,8 @@
   "keywords": [
     "bin",
     "binary",
+    "variable length",
+    "data layout",
     "convert",
     "arraybuffer",
     "buffer",
@@ -20,7 +22,7 @@
     "little-endian",
     "endianness"
   ],
-  "description": "this is library convert binary to javascript object, it's easy to write struct description, it is like C-style struct",
+  "description": "C like style to write struct layout, and it can convert variable length array or string automatically. It can be used in Node.js and Browser",
   "homepage": "https://github.com/aokihu/quick-struct",
   "maintainers": [
     "aokihu@gmail.com"
