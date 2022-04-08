@@ -1,4 +1,4 @@
-![quick-struct banner](/Volumes/Data/Projects/js-cstruct/banner.jpg)
+![quick-struct banner](https://github.com/aokihu/quick-struct/blob/main/banner.jpg?raw=true)
 
 # quick-struct
 
