@@ -77,9 +77,8 @@ describe("Test compile() method", () => {
         const struct = structs[0]
 
         const structName = struct[0]
-        const fields = struct[1]
-        const fieldNames = fields[0]
-        const fieldDetails = fields[1]
+        const fieldNames = struct[1]
+        const fieldDetails = struct[2]
 
         assert.equal(structs.length, 1, 'result set length is not 1')
         assert.equal(structName, 'default', 'the name is not "default"')
@@ -99,9 +98,8 @@ describe("Test compile() method", () => {
         const structs = compile(str);
         const struct = structs[0]
         const structName = struct[0]
-        const fields = struct[1]
-        const fieldNames = fields[0]
-        const fieldDetails = fields[1]
+        const fieldNames = struct[1]
+        const fieldDetails = struct[2]
 
         assert.equal(structs.length, 1, 'result set length is not 1')
         assert.equal(structName, 'default', 'the name is not "default"')

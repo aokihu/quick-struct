@@ -34,8 +34,7 @@ export class QStruct {
     this._structs = compile(rawString);
 
     // Set field names
-    const fields = this.findStruct()![1]; // 'default' struct
-    this._fieldNames = fields[0];
+    this._fieldNames = this.findStruct()![1]; // 'default' struct
 
     // Check endianness
     const testByte = new Uint8Array(new Uint16Array([1]).buffer);
@@ -100,7 +99,7 @@ export class QStruct {
       arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
 
     // get struct fields
-    const fields = struct![1][1];
+    const fields = struct![2];
 
     /* local variable */
     let pos = 0;
@@ -166,7 +165,7 @@ export class QStruct {
     // get struct
     const _struct =
       arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
-    const [_, [_fNames, _fDetails]] = _struct!;
+    const [_, _fNames, _fDetails] = _struct!;
 
     // Object key names
     const _keys = Object.keys(obj);
