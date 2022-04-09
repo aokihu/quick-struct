@@ -28,13 +28,15 @@ export class QStruct {
   /*             Constructor            */
   /* ---------------------------------- */
 
-  constructor(rawString: string) {
-    // Store and compile struct layout string
-    this._rawString = rawString;
-    this._structs = compile(rawString);
+  constructor(rawString?: string) {
+    if (rawString !== undefined) {
+      // Store and compile struct layout string
+      this._rawString = rawString;
+      this._structs = compile(rawString);
 
-    // Set field names
-    this._fieldNames = this.findStruct()![1]; // 'default' struct
+      // Set field names
+      this._fieldNames = this.findStruct()![1]; // 'default' struct
+    }
 
     // Check endianness
     const testByte = new Uint8Array(new Uint16Array([1]).buffer);
@@ -63,6 +65,10 @@ export class QStruct {
 
   get endianness(): string {
     return this._littleEndian ? "little" : "big";
+  }
+
+  get description(): string {
+    return JSON.stringify(this._structs);
   }
 
   /* ---------------------------------- */
@@ -234,6 +240,20 @@ export class QStruct {
    * @returns Decode binary result
    */
   toJSON = () => this.toJson();
+
+  /**
+   * Export struct layout data to base64
+   */
+  exportStructs = () => btoa(JSON.stringify(this._structs));
+
+  /**
+   * Import struct layout data
+   * @param data Struct layout data which stored in base64
+   */
+  importStructs = (data: string) => {
+    this._structs = JSON.parse(atob(data));
+    this._fieldNames = this.findStruct()![1];
+  };
 }
 
 /**
