@@ -95,9 +95,11 @@ export class QStruct {
    * @returns class instance self
    */
   decode(buffer: ArrayBuffer, structName?: string) {
+    // get struct
     const struct =
       arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
 
+    // get struct fields
     const fields = struct![1][1];
 
     /* local variable */
@@ -121,26 +123,25 @@ export class QStruct {
       const _arrayLength = _isVar
         ? this._decodeFieldDataset[_lenOrIdx]
         : _isArr
-          ? _lenOrIdx
-          : 1;
+        ? _lenOrIdx
+        : 1;
 
       typeSize = CODE_TO_BYTE_SIZE[_typeCode];
       offset = pos + typeSize * _arrayLength;
 
-      const byteLength = typeSize * _arrayLength;
-      const dv: DataView = new DataView(buffer, pos, byteLength);
+      const dv: DataView = new DataView(buffer);
       const gm: string = `get${CODE_TO_DV_TYPE[_typeCode]}`;
 
       switch (_attr) {
         case 0x0:
           // @ts-ignore
-          decodedValue = dv[gm](0, isLittleEndian);
+          decodedValue = dv[gm](pos, isLittleEndian);
           break;
         case 0x2:
         case 0x6:
           decodedValue = [...Array(_arrayLength).keys()].map((v, i) =>
             // @ts-ignore
-            dv[gm](i * typeSize, isLittleEndian)
+            dv[gm](i * typeSize + pos, isLittleEndian)
           );
           break;
         case 0x3:
@@ -173,25 +174,29 @@ export class QStruct {
     /* Loop */
     const tmp: any = {};
     let totalByteLength = 0;
+
     for (let _k of _keys) {
       const _v = obj[_k];
       let _fIdx = _fNames.findIndex((n) => n === _k);
       let _fDetail = _fDetails[_fIdx];
       const _result = Object.freeze(convertToBuffer(_k, _v, _fDetail));
 
-      tmp[_k] = { buffer: _result.buffer };
+      // store buffer to temp array
+      tmp[_k] = _result.buffer;
+
+      // add new buffer length to total buffer length
       totalByteLength += _result.buffer.byteLength;
 
       /* Put byte length to placeholder field */
-      let idx;
-      if ((idx = _result.placeholderIndex) !== undefined) {
-        let _name = _fNames[idx];
-        _fDetail = _fDetails[idx];
+      let _i;
+      if ((_i = _result.placeholderIndex) !== undefined) {
+        let _name = _fNames[_i];
+        _fDetail = _fDetails[_i];
         const _resultPlaceholder = Object.freeze(
           convertToBuffer(_name, _result.buffer.byteLength, _fDetail)
         );
 
-        tmp[_name] = { buffer: _resultPlaceholder.buffer };
+        tmp[_name] = _resultPlaceholder.buffer;
         totalByteLength += _resultPlaceholder.buffer.byteLength;
       }
     }
@@ -200,13 +205,13 @@ export class QStruct {
     const output = new Uint8Array(totalByteLength);
 
     let offset = 0;
-    for (let _name of _fNames) {
-      const { buffer } = tmp[_name];
-      const _uintArr = new Uint8Array(buffer);
-      output.set(_uintArr, offset);
-      offset += buffer.byteLength;
+    for (let _k of _fNames) {
+      const _buf = tmp[_k];
+      output.set(new Uint8Array(_buf), offset);
+      offset += _buf.byteLength;
     }
 
+    /* Return array buffer result */
     return output.buffer;
   }
 
