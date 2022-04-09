@@ -10,20 +10,6 @@
  * Description
  * ------------------------------------------------------------
  * compile() method will parse struct descriptor string
- * and return an object which like
- *
- * {
- *  'structName': {
- *      length: Number,
- *      desc:
- *      [
- *          [...keys],
- *          [...info]
- *      ],
- *
- *  },
- *  ...
- * }
  *
  * If there is only one struct, 'default' is the struct name.
  *
@@ -43,14 +29,16 @@ import { TYPE_TO_CODE } from "./types_map";
 /*            Type declare            */
 /* ---------------------------------- */
 
-export type StructBlocks = Array<[string, string[], FieldRecordArray]>;
+export type StructBlocks = Array<
+  [structName: string, fieldNames: string[], fields: FieldRecordArray]
+>;
 
-export interface StructBlockRecord {
+export interface StructRawBlockItem {
   [0]: string; // struct name
   [1]: string; // struct definition field string
 }
 
-export type StructBlockRecordArray = Array<StructBlockRecord>;
+export type StructRawBlockArray = Array<StructRawBlockItem>;
 
 export interface FieldRecord {
   [0]: number; // Field type code
@@ -73,7 +61,7 @@ export type FieldRecordArray = Array<FieldRecord>;
 export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
   const regexp = /\bstruct(\w*)\{(\S*?)\}/g;
   const desc = descriptor.trim().replace(/\s/g, "");
-  const structs: StructBlockRecordArray = [];
+  const structs: StructRawBlockArray = [];
 
   let result;
   while ((result = regexp.exec(desc)) !== null) {
@@ -165,14 +153,14 @@ export const parseArrayLength = (
  * [
  *   [
  *      structName: string,
- *      [
- *          [fieldNames: string,...],
- *          [
- *              type_code: number,
- *              attribute: number,
- *              byte_length: number,
- *          ],
- *          ...
+ *      [fieldNames: string,...],
+ *       [
+ *         [
+ *           type_code: number,
+ *           attribute: number,
+ *           byte_length: number,
+ *         ],
+ *        ...
  *      ]
  *   ],
  *  ...
