@@ -205,6 +205,25 @@ console.log(result.a); // [12, 13, 14]
 console.log(result.b); // "hello"
 ```
 
+## Export and import struct layout
+
+In order to keep the data structure information confidential, **quick-struct** provides export and import of parsed structure data, which is saved in Base64 string format. Users can use other encryption and decryption methods to do secondary processing on the output string.
+
+```javascript
+// Export structer
+const struct = qs`
+   struct {
+       u8 a;
+      u32 b;
+   }
+`
+layout = struct.exportStructs();
+
+// Import structor
+const struct = new QStruct();
+struct.importStructs(layout);
+```
+
 ## API
 
 `qs` template string function, it return a new **QStruct**
