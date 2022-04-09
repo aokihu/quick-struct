@@ -1,4 +1,4 @@
-import { JSCStruct } from '../build/index.js'
+import { QStruct } from '../build/index.js'
 
 console.log("Benchmark v0.0.1")
 
@@ -9,7 +9,7 @@ const StructString = `
 `
 
 console.time("construct")
-let struct = new JSCStruct(StructString)
+let struct = new QStruct(StructString)
 console.timeEnd("construct")
 
 const testU8 = new Uint8Array([12]).buffer
@@ -44,7 +44,7 @@ const StructString2 = `
 const test2 = new Uint8Array([100, 32, 44, 12, 33, 54, 33, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]).buffer
 
 console.time("construct")
-struct = new JSCStruct(StructString2)
+struct = new QStruct(StructString2)
 console.timeEnd("construct")
 
 console.time("100-u[8,16,32,64]-value")
