@@ -2,7 +2,7 @@
  * JS-CStruct library
  *
  * FILE index.ts
- * Version 0.0.1
+ * Version 0.4.1
  * Author aokihu <aokihu@gmail.com>
  * License MIT
  * Copyright (c) 2022 aokihu
@@ -128,8 +128,8 @@ export class QStruct {
       const _arrayLength = _isVar
         ? this._decodeFieldDataset[_lenOrIdx]
         : _isArr
-        ? _lenOrIdx
-        : 1;
+          ? _lenOrIdx
+          : 1;
 
       typeSize = CODE_TO_BYTE_SIZE[_typeCode];
       offset = pos + typeSize * _arrayLength;

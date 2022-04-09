@@ -14,6 +14,7 @@
     "arraybuffer",
     "buffer",
     "struct",
+    "structer",
     "c",
     "rust",
     "encode",
@@ -33,12 +34,13 @@
     "url": "https://github.com/aokihu/quick-struct/issues"
   },
   "scripts": {
-    "prepublish": "rm -f build && yarn build && npx tsc --emitDeclarationOnly --outDir build",
+    "prepublish": "yarn clean && yarn build && npx tsc --emitDeclarationOnly --outDir build",
     "prepack": "rm -rf build && yarn build",
-    "build": "npx esbuild src/index.ts --minify --bundle --platform=node --target=node16 --outfile=build/index.js",
-    "pretest": "npx tsc && npx esbuild src/index.ts --sourcemap --bundle --platform=node --target=node16 --outfile=build/index.js ",
+    "build": "node esbuild.js",
+    "pretest": "npx tsc && npx esbuild src/index.ts --sourcemap --bundle --platform=node --target=node16 --outfile=build/index.js",
     "test": "npx mocha",
-    "bench": "yarn build && node benchmark/index.mjs"
+    "bench": "yarn build && node benchmark/index.mjs",
+    "clean": "rm -rf build"
   },
   "devDependencies": {
     "@types/node": "^17.0.23",
