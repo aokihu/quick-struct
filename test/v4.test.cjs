@@ -83,7 +83,7 @@ describe("Encode testcases", () => {
     })
 
     it("Uint8 array with variable length", () => {
-        
+
         const struct = qs`
             struct {
                 u8 size;
