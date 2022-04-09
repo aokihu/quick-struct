@@ -29,10 +29,12 @@ export class QStruct {
   /* ---------------------------------- */
 
   constructor(rawString: string) {
+    // Store and compile struct layout string
     this._rawString = rawString;
     this._structs = compile(rawString);
-    const defaultStruct = this.findStruct();
-    const [_, fields] = defaultStruct!;
+
+    // Set field names
+    const fields = this.findStruct()![1]; // 'default' struct
     this._fieldNames = fields[0];
 
     // Check endianness
@@ -44,10 +46,8 @@ export class QStruct {
   /*           Private methods          */
   /* ---------------------------------- */
 
-  findStruct(name?: string) {
-    return arguments.length === 0
-      ? this._structs[0]
-      : this._structs.find((s) => s[0] === name);
+  findStruct(name: string = "default") {
+    return this._structs.find((s) => s[0] === name);
   }
 
   /* ---------------------------------- */
