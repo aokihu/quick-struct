@@ -268,7 +268,6 @@ export class QStruct {
 
     // auto flush decoded cache
     if (this._autoFlush) {
-      console.log("Auto flush");
       this.flush();
     }
     return result;
