@@ -2,7 +2,7 @@
  * JS-CStruct library
  *
  * FILE compile.ts
- * Version 0.0.1
+ * Version 0.4.5
  * Author aokihu <aokihu@gmail.com>
  * License MIT
  * Copyright (c) 2022 aokihu
@@ -29,13 +29,19 @@ import { TYPE_TO_CODE } from "./types_map";
 /*            Type declare            */
 /* ---------------------------------- */
 
-export type StructBlocks = Array<
-  [structName: string, fieldNames: string[], fields: FieldRecordArray]
->;
+export type StructBlocks = Array<[structName: string, fieldNames: string[], fields: FieldRecordArray]>;
 
 export interface StructRawBlockItem {
   [0]: string; // struct name
   [1]: string; // struct definition field string
+}
+
+/* Struct Arrtibute */
+export interface StructAttribute {
+  [idx: string]: number | string | boolean | undefined;
+  ver: number; // Quick-Struct version, default is '1'
+  autoflush: boolean; // Auto flush decoded cache, default is false
+  endianness: "big" | "little"; // Endianess
 }
 
 export type StructRawBlockArray = Array<StructRawBlockItem>;
@@ -73,6 +79,38 @@ export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
 };
 
 /**
+ * Parse struct arrtibutes
+ */
+export const parseStructAttribute = (description: string): Partial<StructAttribute> => {
+  const regexp = /\<(\w+)(?::(?:\s*)(\S*))?\>/g;
+  const attrs: Partial<StructAttribute> = {};
+
+  let result;
+  while ((result = regexp.exec(description)) !== null) {
+    let [_key, _val] = result.slice(1);
+    attrs[_key] = parseStructAttrbuteItem(_key, _val);
+  }
+
+  return attrs;
+};
+
+/**
+ * @private
+ * @param key
+ * @param val
+ */
+const parseStructAttrbuteItem = (key: string, val: string): any => {
+  const _k = key.toLocaleLowerCase();
+  return /* <ver: 1> */ _k === "ver"
+    ? Number(val)
+    : /* <autoflush> */ _k === "autoflush"
+    ? true
+    : /* <endianness> */ _k === "endianness"
+    ? val
+    : /* other */ undefined;
+};
+
+/**
  *
  * @param typeCode
  * @param length
@@ -95,11 +133,7 @@ export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
  * P.S.
  * String and digital array are array, bit 2 is '1'
  */
-export const parseAttribute = (
-  typeCode: number,
-  length: undefined | string,
-  expand?: string
-) => {
+export const parseAttribute = (typeCode: number, length: undefined | string, expand?: string) => {
   if (length === undefined && typeCode < 20) {
     return 0x0;
   }
@@ -125,10 +159,13 @@ export const parseAttribute = (
   return 0;
 };
 
-export const parseArrayLength = (
-  length: string | undefined,
-  names: string[]
-) => {
+/**
+ * Get array fixed length or index of field which contain array length
+ * @param length Array length or Field index which contain array length
+ * @param names Fields name array
+ * @returns
+ */
+export const parseArrayLength = (length: string | undefined, names: string[]) => {
   if (length === undefined) {
     return 0;
   } else {
@@ -167,8 +204,7 @@ export const parseArrayLength = (
  * ]
  */
 export const parseBody = (body: string) => {
-  const regexp =
-    /(u8|i8|u16|i16|u32|i32|u64|i64|f32|f64|char|uchar|string)(\w+)(?:\[(\$\w*|\d*)\])?;??/g;
+  const regexp = /(u8|i8|u16|i16|u32|i32|u64|i64|f32|f64|char|uchar|string)(\w+)(?:\[(\$\w*|\d*)\])?;??/g;
 
   const fieldNames: string[] = [];
   const fieldDetails: FieldRecordArray = [];

@@ -8,7 +8,7 @@
  * Copyright (c) 2022 aokihu
  */
 import type { StructBlocks } from "./compile";
-import { compile } from "./compile";
+import { compile, parseStructAttribute } from "./compile";
 import { convertToBuffer } from "./encode";
 import { CODE_TO_BYTE_SIZE, CODE_TO_DV_TYPE } from "./types_map";
 
@@ -35,8 +35,23 @@ export class QStruct {
       this._rawString = rawString;
       this._structs = compile(rawString);
 
-      // Set field names
+      /* ---------------------------------- */
+      /*           Set field names          */
+      /* ---------------------------------- */
       this._fieldNames = this.findStruct()![1]; // 'default' struct
+
+      /* ---------------------------------- */
+      /*          Struct Attributes         */
+      /* ---------------------------------- */
+      const attrs = parseStructAttribute(this._rawString);
+
+      // Set auto flush property
+      this._autoFlush = attrs.autoflush ?? false;
+
+      // Set endianness property
+      if (attrs.endianness) {
+        this._decodeLittleEndian = attrs.endianness !== "big";
+      }
     }
 
     // Check endianness
@@ -230,10 +245,9 @@ export class QStruct {
    * Auto flush decode cache
    * @param on Switch ON or OFF auto flush
    */
-  autoFlush(on: boolean) {
-    this._autoFlush = arguments.length === 0 ? true : on;
+  autoFlush(on?: boolean) {
+    this._autoFlush = on === undefined ? true : on;
 
-    // this._autoFlush = on;
     return this;
   }
 

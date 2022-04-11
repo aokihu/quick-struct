@@ -54,6 +54,23 @@ describe("QStruct class test", () => {
       const buf2 = new Uint8Array([32, 0, 0]).buffer;
       assert.strictEqual(struct.decode(buf2).toJson().a, 32, 'Second "a" is equal 32');
     });
+
+    // With <autoflush>
+    it("Auto flush cache with autoFlush()", () => {
+      const str = `
+                <autoflush>
+                struct {
+                    u8 a;
+                    u16 b;
+                }
+            `;
+
+      const buf = new Uint8Array([16, 0, 0]).buffer;
+      const struct = new QStruct(str);
+      assert.strictEqual(struct.decode(buf).toJson().a, 16, 'First "a" is equal 16');
+      const buf2 = new Uint8Array([32, 0, 0]).buffer;
+      assert.strictEqual(struct.decode(buf2).toJson().a, 32, 'Second "a" is equal 32');
+    });
   });
 
   describe("Anonymous struct test", () => {
