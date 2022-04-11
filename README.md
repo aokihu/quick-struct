@@ -262,11 +262,24 @@ You can use instance method `autoFlush()` to flush cache when output `toJson()` 
 ```javascript
 import { qs } from "quick-struct";
 
+/* ----------- TWO WAYS ------------ */
+
+/* 1. Instance method */
 const struct = qs`
     struct {
         u8 a;
     }
 `.autoFlush();
+
+/* 2. Struct attribute */
+const struct = qs`
+    <autoflush>
+    struct {
+        u8 a;
+    }
+`;
+
+/* -------------------------------- */
 
 // Create the first UInt8 array
 const buffer = new UInt8Array([12]);
