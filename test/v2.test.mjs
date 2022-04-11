@@ -3,6 +3,59 @@ import pkg from "../build/index.js";
 const { QStruct } = pkg;
 
 describe("QStruct class test", () => {
+  describe("Flush testcases", () => {
+    // With flush
+    it("Flush cache with flush()", () => {
+      const str = `
+                struct {
+                    u8 a;
+                    u16 b;
+                }
+            `;
+
+      const buf = new Uint8Array([16, 0, 0]).buffer;
+      const struct = new QStruct(str);
+      assert.strictEqual(struct.decode(buf).toJson().a, 16, 'First "a" is not equal 16');
+      struct.flush();
+
+      const buf2 = new Uint8Array([32, 0, 0]).buffer;
+      assert.strictEqual(struct.decode(buf2).toJson().a, 32, 'Second "a" is not equal 32');
+    });
+
+    // Without flush()
+    it("Flush cache without flush()", () => {
+      const str = `
+                struct {
+                    u8 a;
+                    u16 b;
+                }
+            `;
+
+      const buf = new Uint8Array([16, 0, 0]).buffer;
+      const struct = new QStruct(str);
+      assert.strictEqual(struct.decode(buf).toJson().a, 16, 'First "a" is equal 16');
+      const buf2 = new Uint8Array([32, 0, 0]).buffer;
+      assert.notStrictEqual(struct.decode(buf2).toJson().a, 32, 'Second "a" is not equal 32');
+      assert.strictEqual(struct.decode(buf2).toJson().a, 16, 'Second "a" is equal 16');
+    });
+
+    // With autoFlush()
+    it("Auto flush cache with autoFlush()", () => {
+      const str = `
+                struct {
+                    u8 a;
+                    u16 b;
+                }
+            `;
+
+      const buf = new Uint8Array([16, 0, 0]).buffer;
+      const struct = new QStruct(str).autoFlush();
+      assert.strictEqual(struct.decode(buf).toJson().a, 16, 'First "a" is equal 16');
+      const buf2 = new Uint8Array([32, 0, 0]).buffer;
+      assert.strictEqual(struct.decode(buf2).toJson().a, 32, 'Second "a" is equal 32');
+    });
+  });
+
   describe("Anonymous struct test", () => {
     it("Endiannes is same", () => {
       const testNumber = new Uint8Array(new Uint16Array([1]).buffer);
@@ -15,64 +68,7 @@ describe("QStruct class test", () => {
             `;
       const buf = new Uint8Array([16]).buffer;
       const struct = new QStruct(str);
-      assert.strictEqual(
-        struct.isLittleEndian,
-        isLittleEndian,
-        "Endiannes is different"
-      );
-    });
-
-    it("Flush cache with flush", () => {
-      const str = `
-                struct {
-                    u8 a;
-                    u16 b;
-                }
-            `;
-
-      const buf = new Uint8Array([16, 0, 0]).buffer;
-      const struct = new QStruct(str);
-      assert.strictEqual(
-        struct.decode(buf).toJson().a,
-        16,
-        'First "a" is not equal 16'
-      );
-      struct.flush();
-
-      const buf2 = new Uint8Array([32, 0, 0]).buffer;
-      assert.strictEqual(
-        struct.decode(buf2).toJson().a,
-        32,
-        'Second "a" is not equal 32'
-      );
-    });
-
-    it("Flush cache without flush", () => {
-      const str = `
-                struct {
-                    u8 a;
-                    u16 b;
-                }
-            `;
-
-      const buf = new Uint8Array([16, 0, 0]).buffer;
-      const struct = new QStruct(str);
-      assert.strictEqual(
-        struct.decode(buf).toJson().a,
-        16,
-        'First "a" is not equal 16'
-      );
-      const buf2 = new Uint8Array([32, 0, 0]).buffer;
-      assert.notStrictEqual(
-        struct.decode(buf2).toJson().a,
-        32,
-        'Second "a" is equal 32'
-      );
-      assert.strictEqual(
-        struct.decode(buf2).toJson().a,
-        16,
-        'Second "a" is not equal 16'
-      );
+      assert.strictEqual(struct.isLittleEndian, isLittleEndian, "Endiannes is different");
     });
 
     it("uint8 element and equal 16", () => {
@@ -208,9 +204,7 @@ describe("QStruct class test", () => {
                 }
             `;
 
-      const buf = Uint8Array.from(
-        "hello".split("").map((w) => w.charCodeAt(0))
-      ).buffer;
+      const buf = Uint8Array.from("hello".split("").map((w) => w.charCodeAt(0))).buffer;
       const struct = new QStruct(str);
       const obj = struct.decode(buf).toJson();
       assert.deepEqual(obj.a, "hello", 'string is not "hello"');
@@ -275,17 +269,9 @@ describe("QStruct class test", () => {
       const struct = new QStruct(str);
       const obj = struct.decode(buf).toJson();
       assert.strictEqual(obj.index, index, `index is not ${index}`);
-      assert.strictEqual(
-        obj.phone_size,
-        phone.length,
-        `phone size is not ${phone.length}`
-      );
+      assert.strictEqual(obj.phone_size, phone.length, `phone size is not ${phone.length}`);
       assert.strictEqual(obj.address, address, `addres is not '${address}'`);
-      assert.strictEqual(
-        obj.phone_size,
-        phone.length,
-        `phone size is not ${phone.length}`
-      );
+      assert.strictEqual(obj.phone_size, phone.length, `phone size is not ${phone.length}`);
       assert.strictEqual(obj.phone, phone, `phone is not '${phone}'`);
     });
   });

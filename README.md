@@ -257,6 +257,33 @@ struct.flush();
 console.log(result2.a); // print '32'
 ```
 
+You can use instance method `autoFlush()` to flush cache when output `toJson()` executed automaticly.
+
+```javascript
+import { qs } from "quick-struct";
+
+const struct = qs`
+    struct {
+        u8 a;
+    }
+`.autoFlush();
+
+// Create the first UInt8 array
+const buffer = new UInt8Array([12]);
+
+// Decode buffer
+const result = struct.decode(buffer).toJson();
+
+// Print decoded result
+console.log(result.a); // print '12'
+
+// Create the second Uint8 array
+const buffer2 = new Uint8Array([32]);
+const result2 = struct.decode(buffer2).toJson();
+
+console.log(result2.a); // print '32'
+```
+
 ## API
 
 `qs` template string function, it return a new **QStruct**

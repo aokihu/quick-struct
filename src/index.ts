@@ -23,6 +23,7 @@ export class QStruct {
   private _structs: StructBlocks = []; // array to store binary parsed data
   private _littleEndian: boolean = true;
   private _decodeLittleEndian: boolean = true;
+  private _autoFlush: boolean = false;
 
   /* ---------------------------------- */
   /*             Constructor            */
@@ -101,8 +102,7 @@ export class QStruct {
    */
   decode(buffer: ArrayBuffer, structName?: string) {
     // get struct
-    const struct =
-      arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
+    const struct = arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
 
     // get struct fields
     const fields = struct![2];
@@ -125,11 +125,7 @@ export class QStruct {
       const _isVar: boolean = (_attr & 0x4) !== 0;
 
       // Get array length
-      const _arrayLength = _isVar
-        ? this._decodeFieldDataset[_lenOrIdx]
-        : _isArr
-        ? _lenOrIdx
-        : 1;
+      const _arrayLength = _isVar ? this._decodeFieldDataset[_lenOrIdx] : _isArr ? _lenOrIdx : 1;
 
       typeSize = CODE_TO_BYTE_SIZE[_typeCode];
       offset = pos + typeSize * _arrayLength;
@@ -170,8 +166,7 @@ export class QStruct {
    */
   encode(obj: any, structName?: string) {
     // get struct
-    const _struct =
-      arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
+    const _struct = arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
     const [_, _fNames, _fDetails] = _struct!;
 
     // Object key names
@@ -198,9 +193,7 @@ export class QStruct {
       if ((_i = _result.placeholderIndex) !== undefined) {
         let _name = _fNames[_i];
         _fDetail = _fDetails[_i];
-        const _resultPlaceholder = Object.freeze(
-          convertToBuffer(_name, _result.buffer.byteLength, _fDetail)
-        );
+        const _resultPlaceholder = Object.freeze(convertToBuffer(_name, _result.buffer.byteLength, _fDetail));
 
         tmp[_name] = _resultPlaceholder.buffer;
         totalByteLength += _resultPlaceholder.buffer.byteLength;
@@ -225,8 +218,23 @@ export class QStruct {
   /*             Flush cache            */
   /* ---------------------------------- */
 
+  /**
+   * Flush decoded cache
+   */
   flush() {
     this._decodeFieldDataset = [];
+    return this;
+  }
+
+  /**
+   * Auto flush decode cache
+   * @param on Switch ON or OFF auto flush
+   */
+  autoFlush(on: boolean) {
+    this._autoFlush = arguments.length === 0 ? true : on;
+
+    // this._autoFlush = on;
+    return this;
   }
 
   /* ---------------------------------- */
@@ -237,12 +245,20 @@ export class QStruct {
    * Ouput decode data with json
    * @returns Decode binary data
    */
-  toJson = () =>
-    Object.freeze(
+  toJson = () => {
+    const result = Object.freeze(
       this._fieldNames.reduce((T, name, idx) => {
         return { ...T, [name]: this._decodeFieldDataset[idx] };
       }, {})
     );
+
+    // auto flush decoded cache
+    if (this._autoFlush) {
+      console.log("Auto flush");
+      this.flush();
+    }
+    return result;
+  };
 
   /**
    * a.k.a toJson()
