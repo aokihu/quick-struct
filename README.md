@@ -23,14 +23,12 @@ Type and byte length
 |    8-bit     |   i8   |    u8    |   Yes   |
 |    16-bit    |  i16   |   u16    |   Yes   |
 |    32-bit    |  i32   |   u32    |   Yes   |
-|    64-bit    |  i64   |   u64    |   No    |
+|    64-bit    |  i64   |   u64    |   Yes   |
 |   128-bit    |  i128  |   u128   |   No    |
 |     arch     | isize  |  usize   |   No    |
 | float-32-bit |  f32   |    -     |   Yes   |
 | float-64-bit |  f64   |    -     |   Yes   |
 |    8-bit     |  char  |  uchar   |   Yes   |
-
-Because JavaScript's support for 64-bit bytes is not perfect, it cannot support 64-bit data format well for the time being, and will improve the support for 64-bit data in the future.
 
 ## Install
 

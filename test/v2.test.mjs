@@ -135,6 +135,32 @@ describe("QStruct class test", () => {
       assert.strictEqual(obj.a, 593124, "first element is not equal 593124");
     });
 
+    it("uint64 element and equal 593124", () => {
+      const str = `
+                struct {
+                    u64 a;
+                }
+            `;
+      const max64 = 2n ** 64n - 1n;
+      const buf = new BigUint64Array([max64]).buffer;
+      const struct = new QStruct(str);
+      const obj = struct.decode(buf).toJson();
+      assert.strictEqual(obj.a, max64, `first element is not equal ${max64}`);
+    });
+
+    it("int64 element and equal 593124", () => {
+      const str = `
+                struct {
+                    i64 a;
+                }
+            `;
+      const max64 = 2n ** (64n - 1n) - 1n;
+      const buf = new BigInt64Array([max64]).buffer;
+      const struct = new QStruct(str);
+      const obj = struct.decode(buf).toJson();
+      assert.strictEqual(obj.a, max64, `first element is not equal ${max64}`);
+    });
+
     it("element is u8 array", () => {
       const str = `
                 struct {
