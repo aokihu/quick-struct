@@ -19,7 +19,7 @@ export class QStruct {
 
   private _rawString: string = ""; // struct descripted string
   private _fieldNames: string[] = []; // array to store key name
-  private _decodeFieldDataset: any[] = []; // decoed binary data
+  private _decodeFieldDataset: any[] = []; // decoded binary data
   private _structs: StructBlocks = []; // array to store binary parsed data
   private _littleEndian: boolean = true;
   private _decodeLittleEndian: boolean = true;
@@ -128,8 +128,8 @@ export class QStruct {
       const _arrayLength = _isVar
         ? this._decodeFieldDataset[_lenOrIdx]
         : _isArr
-          ? _lenOrIdx
-          : 1;
+        ? _lenOrIdx
+        : 1;
 
       typeSize = CODE_TO_BYTE_SIZE[_typeCode];
       offset = pos + typeSize * _arrayLength;
@@ -157,6 +157,7 @@ export class QStruct {
 
       pos = offset;
       this._decodeFieldDataset.push(decodedValue);
+      // this._decodeFieldDataset[idx] = decodedValue;
     }
 
     return this;
@@ -218,6 +219,14 @@ export class QStruct {
 
     /* Return array buffer result */
     return output.buffer;
+  }
+
+  /* ---------------------------------- */
+  /*             Flush cache            */
+  /* ---------------------------------- */
+
+  flush() {
+    this._decodeFieldDataset = [];
   }
 
   /* ---------------------------------- */

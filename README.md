@@ -19,16 +19,16 @@ It's very easy, **u8** is an unsigned byte(8 bit) and **u16** is 2 unsinged byte
 Type and byte length
 
 | Byte length  | signed | unsigned | Support |
-|:------------:|:------:|:--------:|:-------:|
-| 8-bit        | i8     | u8       | Yes     |
-| 16-bit       | i16    | u16      | Yes     |
-| 32-bit       | i32    | u32      | Yes     |
-| 64-bit       | i64    | u64      | No      |
-| 128-bit      | i128   | u128     | No      |
-| arch         | isize  | usize    | No      |
-| float-32-bit | f32    | -        | Yes     |
-| float-64-bit | f64    | -        | Yes     |
-| 8-bit        | char   | uchar    | Yes     |
+| :----------: | :----: | :------: | :-----: |
+|    8-bit     |   i8   |    u8    |   Yes   |
+|    16-bit    |  i16   |   u16    |   Yes   |
+|    32-bit    |  i32   |   u32    |   Yes   |
+|    64-bit    |  i64   |   u64    |   No    |
+|   128-bit    |  i128  |   u128   |   No    |
+|     arch     | isize  |  usize   |   No    |
+| float-32-bit |  f32   |    -     |   Yes   |
+| float-64-bit |  f64   |    -     |   Yes   |
+|    8-bit     |  char  |  uchar   |   Yes   |
 
 Because JavaScript's support for 64-bit bytes is not perfect, it cannot support 64-bit data format well for the time being, and will improve the support for 64-bit data in the future.
 
@@ -39,6 +39,7 @@ You can use `npm` or `yarn` install.
 ```bash
 # use yarn
 yarn add quick-struct
+
 #use npm
 npm install quick-struct
 ```
@@ -59,7 +60,7 @@ const struct = qs`
 `;
 
 // Create a UInt8 array
-const buffer = new UInt8Aray([12]);
+const buffer = new UInt8Array([12]);
 
 // Decode buffer
 const result = struct.decode(buffer).toJson();
@@ -82,7 +83,7 @@ const structDescriptor = `
 const struct = new QStruct(structDescriptor);
 
 // Create a UInt8 array
-const buffer = new UInt8Aray([12]);
+const buffer = new UInt8Array([12]);
 
 // Decode buffer
 const result = struct.decode(buffer).toJson();
@@ -107,7 +108,7 @@ const struct = qs`
 `;
 
 // Create a UInt8 array
-const buffer = new UInt8Aray([12, 16, 32]);
+const buffer = new UInt8Array([12, 16, 32]);
 
 // Decode buffer
 const result = struct.decode(buffer).toJson();
@@ -136,7 +137,7 @@ const struct = qs`
 
 // Create a UInt8 array
 const text = new TextEncoder().encode("hello");
-const buffer = new UInt8Aray([12, 13, 14, ...text]);
+const buffer = new UInt8Array([12, 13, 14, ...text]);
 
 // Decode buffer
 const result = struct.decode(buffer).toJson();
@@ -192,7 +193,7 @@ const struct = qs`
 
 // Create a UInt8 array
 const text = new TextEncoder().encode("hello");
-const buffer = new UInt8Aray([12, 13, 14, ...text]);
+const buffer = new UInt8Array([12, 13, 14, ...text]);
 
 // Set little-endian mode
 const result = struct.setLittleEndian().decode(buffer).toJson();
@@ -216,12 +217,46 @@ const struct = qs`
        u8 a;
       u32 b;
    }
-`
+`;
 layout = struct.exportStructs();
 
 // Import structor
 const struct = new QStruct();
 struct.importStructs(layout);
+```
+
+## Flush
+
+Decoded buffer data will stored till `flush()` trigger, so if you want decode different binary data with one `quick-struct` instance, you must `flush` cache after `toJson()` or `toJSON()`
+
+```javascript
+import { qs } from "quick-struct";
+
+const struct = qs`
+    struct {
+        u8 a;
+    }
+`;
+
+// Create the first UInt8 array
+const buffer = new UInt8Array([12]);
+
+// Decode buffer
+const result = struct.decode(buffer).toJson();
+
+// Print decoded result
+console.log(result.a); // print '12'
+
+// Create the second Uint8 array
+const buffer2 = new Uint8Array([32]);
+const result2 = struct.decode(buffer2).toJson();
+
+// Without flush()
+console.log(result2.a); // print '12'
+
+// With flush()
+struct.flush();
+console.log(result2.a); // print '32'
 ```
 
 ## API
