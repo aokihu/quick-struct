@@ -12,7 +12,12 @@ export interface ConvertToBufferResult {
  * @param value Field value
  * @param fieldDetail Field detail
  */
-export const convertToBuffer = (name: string, value: any, fieldDetail: FieldRecord): ConvertToBufferResult => {
+export const convertToBuffer = (
+  name: string,
+  value: any,
+  fieldDetail: FieldRecord,
+  isLittleEndianness: boolean = false
+): ConvertToBufferResult => {
   /* Field detail */
   const _fTypeCode = fieldDetail[0];
   const _fAttribute = fieldDetail[1];
@@ -44,7 +49,7 @@ export const convertToBuffer = (name: string, value: any, fieldDetail: FieldReco
     const dv = new DataView(buffer);
     for (let i = 0; i < value.length; i += 1) {
       // @ts-ignore
-      dv[_gm](i * _typeSize, value[i]);
+      dv[_gm](i * _typeSize, value[i], isLittleEndianness);
     }
     result.buffer = buffer;
     return result;
@@ -62,7 +67,7 @@ export const convertToBuffer = (name: string, value: any, fieldDetail: FieldReco
     const buffer = new ArrayBuffer(_bufferLength);
     const dv = new DataView(buffer);
     // @ts-ignore
-    dv[_gm](0, value);
+    dv[_gm](0, value, isLittleEndianness);
     result.buffer = buffer;
     return result;
   }

@@ -180,6 +180,9 @@ export class QStruct {
    * @param structName struct name
    */
   encode(obj: any, structName?: string) {
+    // Little endianness
+    const isLittleEndian = this._decodeLittleEndian;
+
     // get struct
     const _struct = arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
     const [_, _fNames, _fDetails] = _struct!;
@@ -195,7 +198,7 @@ export class QStruct {
       const _v = obj[_k];
       let _fIdx = _fNames.findIndex((n) => n === _k);
       let _fDetail = _fDetails[_fIdx];
-      const _result = Object.freeze(convertToBuffer(_k, _v, _fDetail));
+      const _result = Object.freeze(convertToBuffer(_k, _v, _fDetail, isLittleEndian));
 
       // store buffer to temp array
       tmp[_k] = _result.buffer;
