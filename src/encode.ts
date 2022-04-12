@@ -12,11 +12,7 @@ export interface ConvertToBufferResult {
  * @param value Field value
  * @param fieldDetail Field detail
  */
-export const convertToBuffer = (
-  name: string,
-  value: any,
-  fieldDetail: FieldRecord
-): ConvertToBufferResult => {
+export const convertToBuffer = (name: string, value: any, fieldDetail: FieldRecord): ConvertToBufferResult => {
   /* Field detail */
   const _fTypeCode = fieldDetail[0];
   const _fAttribute = fieldDetail[1];
