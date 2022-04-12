@@ -19,16 +19,16 @@ It's very easy, **u8** is an unsigned byte(8 bit) and **u16** is 2 unsinged byte
 Type and byte length
 
 | Byte length  | signed | unsigned | Support |
-| :----------: | :----: | :------: | :-----: |
-|    8-bit     |   i8   |    u8    |   Yes   |
-|    16-bit    |  i16   |   u16    |   Yes   |
-|    32-bit    |  i32   |   u32    |   Yes   |
-|    64-bit    |  i64   |   u64    |   Yes   |
-|   128-bit    |  i128  |   u128   |   No    |
-|     arch     | isize  |  usize   |   No    |
-| float-32-bit |  f32   |    -     |   Yes   |
-| float-64-bit |  f64   |    -     |   Yes   |
-|    8-bit     |  char  |  uchar   |   Yes   |
+|:------------:|:------:|:--------:|:-------:|
+| 8-bit        | i8     | u8       | Yes     |
+| 16-bit       | i16    | u16      | Yes     |
+| 32-bit       | i32    | u32      | Yes     |
+| 64-bit       | i64    | u64      | Yes     |
+| 128-bit      | i128   | u128     | No      |
+| arch         | isize  | usize    | No      |
+| float-32-bit | f32    | -        | Yes     |
+| float-64-bit | f64    | -        | Yes     |
+| 8-bit        | char   | uchar    | Yes     |
 
 ## Install
 
@@ -173,6 +173,63 @@ const struct = qs`
             u8 b;
       }
  `;
+```
+
+### Encode object to ArrayBuffer
+
+`quick-struct` also support encode `object` to `ArrayBuffer`, below is the example.
+
+```javascript
+const struct = qs`
+    <autoflush>
+    struct {
+        u8 head;
+        u32 groupToken;
+        u32 deviceToken;
+        u8 addressType;
+        u8 addressLength;
+        uchar address[$addressLength];
+    }
+`;
+
+const msg = {
+  head: 209,
+  groupToken: 0,
+  deviceToken: 1,
+  addressType: 0,
+  addressLength: 9,
+  address: "234.0.0.1",
+};
+
+const buf = struct.encode(msg);
+```
+
+The endianness of output binary was decieded by your computer arch or OS, it is `little-endian` in mostly on `Intel` or `AMD` CPU.
+You can also set `big-endian` with `quick-struct` with method `setBigEndian()` like decode binary.
+
+```javascript
+const struct = qs`
+    <autoflush>
+    struct {
+        u8 head;
+        u32 groupToken;
+        u32 deviceToken;
+        u8 addressType;
+        u8 addressLength;
+        uchar address[$addressLength];
+    }
+`;
+
+const msg = {
+  head: 209,
+  groupToken: 0,
+  deviceToken: 1,
+  addressType: 0,
+  addressLength: 9,
+  address: "234.0.0.1",
+};
+
+const buf = struct.setBigEndian().encode(msg);
 ```
 
 ### Endianness
