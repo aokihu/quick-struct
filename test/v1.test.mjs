@@ -1,5 +1,10 @@
 import assert from "assert";
-import { findStructBlocks, parseBody, compile, parseStructAttribute } from "../build/compile.js";
+import {
+  findStructBlocks,
+  parseBody,
+  compile,
+  parseStructAttribute,
+} from "../build/compile.js";
 
 describe("Test compile methods", () => {
   it("No name struct, it will return 'default'", () => {
@@ -128,15 +133,15 @@ describe("Test parseStructAttributes() method", () => {
     assert.equal(attrs["autoflush"], true, '"autoflush" is true');
   });
 
-  it("Attribute: 'endinaness'", () => {
+  it("Attribute: 'endian'", () => {
     const str = `
-            <endianness: little>
+            <endian: little>
             struct {
                 char name[16];
             }
         `;
     const attrs = parseStructAttribute(str);
-    assert.deepEqual(attrs["endianness"], "little", '"endianness" is little');
+    assert.deepEqual(attrs["endian"], "little", '"endian" is little');
   });
 
   it("Attribute: 'version' and 'autoflush'", () => {

@@ -49,8 +49,8 @@ export class QStruct {
       this._autoFlush = attrs.autoflush ?? false;
 
       // Set endianness property
-      if (attrs.endianness) {
-        this._decodeLittleEndian = attrs.endianness !== "big";
+      if (attrs.endian) {
+        this._decodeLittleEndian = attrs.endian !== "big";
       }
     }
 
@@ -117,7 +117,8 @@ export class QStruct {
    */
   decode(buffer: ArrayBuffer, structName?: string) {
     // get struct
-    const struct = arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
+    const struct =
+      arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
 
     // get struct fields
     const fields = struct![2];
@@ -140,7 +141,11 @@ export class QStruct {
       const _isVar: boolean = (_attr & 0x4) !== 0;
 
       // Get array length
-      const _arrayLength = _isVar ? this._decodeFieldDataset[_lenOrIdx] : _isArr ? _lenOrIdx : 1;
+      const _arrayLength = _isVar
+        ? this._decodeFieldDataset[_lenOrIdx]
+        : _isArr
+        ? _lenOrIdx
+        : 1;
 
       typeSize = CODE_TO_BYTE_SIZE[_typeCode];
       offset = pos + typeSize * _arrayLength;
@@ -184,7 +189,8 @@ export class QStruct {
     const isLittleEndian = this._decodeLittleEndian;
 
     // get struct
-    const _struct = arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
+    const _struct =
+      arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
     const [_, _fNames, _fDetails] = _struct!;
 
     // Object key names
@@ -198,7 +204,9 @@ export class QStruct {
       const _v = obj[_k];
       let _fIdx = _fNames.findIndex((n) => n === _k);
       let _fDetail = _fDetails[_fIdx];
-      const _result = Object.freeze(convertToBuffer(_k, _v, _fDetail, isLittleEndian));
+      const _result = Object.freeze(
+        convertToBuffer(_k, _v, _fDetail, isLittleEndian)
+      );
 
       // store buffer to temp array
       tmp[_k] = _result.buffer;
@@ -211,7 +219,9 @@ export class QStruct {
       if ((_i = _result.placeholderIndex) !== undefined) {
         let _name = _fNames[_i];
         _fDetail = _fDetails[_i];
-        const _resultPlaceholder = Object.freeze(convertToBuffer(_name, _result.buffer.byteLength, _fDetail));
+        const _resultPlaceholder = Object.freeze(
+          convertToBuffer(_name, _result.buffer.byteLength, _fDetail)
+        );
 
         tmp[_name] = _resultPlaceholder.buffer;
         totalByteLength += _resultPlaceholder.buffer.byteLength;

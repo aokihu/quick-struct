@@ -29,7 +29,9 @@ import { TYPE_TO_CODE } from "./types_map";
 /*            Type declare            */
 /* ---------------------------------- */
 
-export type StructBlocks = Array<[structName: string, fieldNames: string[], fields: FieldRecordArray]>;
+export type StructBlocks = Array<
+  [structName: string, fieldNames: string[], fields: FieldRecordArray]
+>;
 
 export interface StructRawBlockItem {
   [0]: string; // struct name
@@ -41,7 +43,7 @@ export interface StructAttribute {
   [idx: string]: number | string | boolean | undefined;
   ver: number; // Quick-Struct version, default is '1'
   autoflush: boolean; // Auto flush decoded cache, default is false
-  endianness: "big" | "little"; // Endianess
+  endian: "big" | "little"; // Endianess
 }
 
 export type StructRawBlockArray = Array<StructRawBlockItem>;
@@ -81,7 +83,9 @@ export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
 /**
  * Parse struct arrtibutes
  */
-export const parseStructAttribute = (description: string): Partial<StructAttribute> => {
+export const parseStructAttribute = (
+  description: string
+): Partial<StructAttribute> => {
   const regexp = /\<(\w+)(?::(?:\s*)(\S*))?\>/g;
   const attrs: Partial<StructAttribute> = {};
 
@@ -105,7 +109,7 @@ const parseStructAttrbuteItem = (key: string, val: string): any => {
     ? Number(val)
     : /* <autoflush> */ _k === "autoflush"
     ? true
-    : /* <endianness> */ _k === "endianness"
+    : /* <endianness> */ _k === "endian"
     ? val
     : /* other */ undefined;
 };
@@ -133,7 +137,11 @@ const parseStructAttrbuteItem = (key: string, val: string): any => {
  * P.S.
  * String and digital array are array, bit 2 is '1'
  */
-export const parseAttribute = (typeCode: number, length: undefined | string, expand?: string) => {
+export const parseAttribute = (
+  typeCode: number,
+  length: undefined | string,
+  expand?: string
+) => {
   if (length === undefined && typeCode < 20) {
     return 0x0;
   }
@@ -165,7 +173,10 @@ export const parseAttribute = (typeCode: number, length: undefined | string, exp
  * @param names Fields name array
  * @returns
  */
-export const parseArrayLength = (length: string | undefined, names: string[]) => {
+export const parseArrayLength = (
+  length: string | undefined,
+  names: string[]
+) => {
   if (length === undefined) {
     return 0;
   } else {
@@ -204,7 +215,8 @@ export const parseArrayLength = (length: string | undefined, names: string[]) =>
  * ]
  */
 export const parseBody = (body: string) => {
-  const regexp = /(u8|i8|u16|i16|u32|i32|u64|i64|f32|f64|char|uchar|string)(\w+)(?:\[(\$\w*|\d*)\])?;??/g;
+  const regexp =
+    /(u8|i8|u16|i16|u32|i32|u64|i64|f32|f64|char|uchar|string)(\w+)(?:\[(\$\w*|\d*)\])?;??/g;
 
   const fieldNames: string[] = [];
   const fieldDetails: FieldRecordArray = [];

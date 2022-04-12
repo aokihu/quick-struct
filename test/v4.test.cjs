@@ -37,7 +37,11 @@ describe("Encode testcases", () => {
     const dv = new DataView(buf);
 
     obj.a.forEach((val, i) => {
-      assert.strictEqual(dv.getUint8(i), val, `Array[${i}] is not equal ${val}`);
+      assert.strictEqual(
+        dv.getUint8(i),
+        val,
+        `Array[${i}] is not equal ${val}`
+      );
     });
   });
 
@@ -54,10 +58,13 @@ describe("Encode testcases", () => {
 
     const buf = struct.encode(obj);
     const dv = new DataView(buf);
-    console.log(dv);
 
     obj.a.forEach((val, i) => {
-      assert.strictEqual(dv.getUint16(i * 2, true), val, `Array[${i}] is not equal ${val}`);
+      assert.strictEqual(
+        dv.getUint16(i * 2, true),
+        val,
+        `Array[${i}] is not equal ${val}`
+      );
     });
   });
 
@@ -76,7 +83,11 @@ describe("Encode testcases", () => {
     const dv = new DataView(buf);
 
     obj.a.forEach((val, i) => {
-      assert.strictEqual(dv.getUint32(i * 4, true), val, `Array[${i}] is not equal ${val}`);
+      assert.strictEqual(
+        dv.getUint32(i * 4, true),
+        val,
+        `Array[${i}] is not equal ${val}`
+      );
     });
   });
 
@@ -96,10 +107,22 @@ describe("Encode testcases", () => {
     const buf = struct.encode(obj);
     const dv = new DataView(buf);
 
-    assert.strictEqual(buf.byteLength, size + 1, `Buffer byte length is not ${1 + size}`);
-    assert.strictEqual(dv.getUint8(0), size, `Array length is not equal ${size}`);
+    assert.strictEqual(
+      buf.byteLength,
+      size + 1,
+      `Buffer byte length is not ${1 + size}`
+    );
+    assert.strictEqual(
+      dv.getUint8(0),
+      size,
+      `Array length is not equal ${size}`
+    );
     testArray.forEach((v, i) => {
-      assert.strictEqual(dv.getUint8(1 + i), v, `Array[${i}] is not equal ${v}`);
+      assert.strictEqual(
+        dv.getUint8(1 + i),
+        v,
+        `Array[${i}] is not equal ${v}`
+      );
     });
   });
 
@@ -153,7 +176,7 @@ describe("Encode testcases", () => {
     assert.strictEqual(dv.getUint8(14), 9, "Byte[14] is 9");
   });
 
-  it("Complex struct encode, big endianness", () => {
+  it("Complex struct encode, endian-big", () => {
     const struct = qs`
         <autoflush>
         struct {
@@ -180,7 +203,44 @@ describe("Encode testcases", () => {
     };
 
     const buf = struct.setBigEndian().encode(msg);
-    console.log(buf);
+    const dv = new DataView(buf, 0);
+    assert.strictEqual(dv.getUint8(0), 209, "Byte[0] is 209");
+    assert.strictEqual(dv.getUint32(1), 0, "Byte[1-2] is 0");
+    assert.strictEqual(dv.getUint32(5), 1, "Byte[5-8] is 1");
+    assert.strictEqual(dv.getUint16(9), 8801, "Byte[9-10] is 8801");
+    assert.strictEqual(dv.getUint16(11), 8800, "Byte[11-12] is 8800");
+    assert.strictEqual(dv.getUint8(13), 0, "Byte[13] is 0");
+    assert.strictEqual(dv.getUint8(14), 9, "Byte[14] is 9");
+  });
+
+  it("Complex struct encode, endian-big using struct attribute", () => {
+    const struct = qs`
+        <autoflush>
+        <endian:big>
+        struct {
+            u8 head;
+            u32 groupToken;
+            u32 deviceToken;
+            u16 inPort;
+            u16 outPort;
+            u8 addressType;
+            u8 addressLength;
+            uchar address[$addressLength];
+        }
+      `;
+
+    const msg = {
+      head: 209,
+      groupToken: 0,
+      deviceToken: 1,
+      inPort: 8801,
+      outPort: 8800,
+      addressType: 0,
+      addressLength: 9,
+      address: "234.0.0.1",
+    };
+
+    const buf = struct.encode(msg);
     const dv = new DataView(buf, 0);
     assert.strictEqual(dv.getUint8(0), 209, "Byte[0] is 209");
     assert.strictEqual(dv.getUint32(1), 0, "Byte[1-2] is 0");
