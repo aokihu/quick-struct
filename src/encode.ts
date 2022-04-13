@@ -47,7 +47,8 @@ export const convertToBuffer = (
     const _bufferLength = _typeSize * value.length;
     const buffer = new ArrayBuffer(_bufferLength);
     const dv = new DataView(buffer);
-    for (let i = 0; i < value.length; i += 1) {
+    const length = value.length;
+    for (let i = 0; i < length; i += 1) {
       // @ts-ignore
       dv[_gm](i * _typeSize, value[i], isLittleEndianness);
     }
