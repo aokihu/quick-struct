@@ -42,6 +42,50 @@ export const convertToBuffer = (
 
   /* Convert value to buffer */
 
+  /**
+   * -----------------------------------------------------
+   *                      BigInt64
+   * -----------------------------------------------------
+   */
+  if (_fTypeCode === 16 || _fAttribute === 17) {
+    // Array
+    if (typeof value === "object" && Array.isArray(value)) {
+      const _bufferLength = _typeSize * value.length;
+      const buffer = new ArrayBuffer(_bufferLength);
+      const dv = new DataView(buffer);
+      const length = value.length;
+      for (let i = 0; i < length; i += 1) {
+        // @ts-ignore
+        dv[_gm](i * _typeSize, BigInt(value[i]), isLittleEndianness);
+      }
+      result.buffer = buffer;
+      return result;
+    }
+    // Only one digital
+    else {
+      const _bufferLength = _typeSize;
+      const buffer = new ArrayBuffer(_bufferLength);
+      const dv = new DataView(buffer);
+      const _value =
+        typeof value === "bigint"
+          ? value
+          : typeof value === "number"
+          ? BigInt(value)
+          : undefined;
+
+      // @ts-ignore
+      dv[_gm](0, _value, isLittleEndianness);
+      result.buffer = buffer;
+      return result;
+    }
+  }
+
+  /**
+   * -----------------------------------------------------
+   *                  NOT BigInt64
+   * -----------------------------------------------------
+   */
+
   // Digital array
   if (typeof value === "object" && Array.isArray(value)) {
     const _bufferLength = _typeSize * value.length;
@@ -63,7 +107,7 @@ export const convertToBuffer = (
   }
 
   // Only one digital
-  if (typeof value === "number" || typeof value === "bigint") {
+  if (typeof value === "number") {
     const _bufferLength = _typeSize;
     const buffer = new ArrayBuffer(_bufferLength);
     const dv = new DataView(buffer);
