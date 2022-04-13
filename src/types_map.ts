@@ -131,5 +131,5 @@ export interface ICODE_TO_BYTE_SIZE {
 }
 
 export const CODE_TO_BYTE_SIZE: ICODE_TO_BYTE_SIZE = [
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 4, 4, 6, 6, 4, 8, 1, 1, 1,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 4, 4, 8, 8, 4, 8, 1, 1, 1,
 ];
