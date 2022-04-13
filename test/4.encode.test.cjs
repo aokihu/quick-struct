@@ -23,7 +23,7 @@ describe("Encode testcases", () => {
   });
 
   // BigUint64
-  it("BigUint64 encode", () => {
+  it("BigUint64 encode, number with BigInt64 type", () => {
     const struct = qs`
       struct {
         u64 a;
@@ -31,6 +31,26 @@ describe("Encode testcases", () => {
     `;
 
     const a = BigInt(12333333333);
+    const obj = {
+      a,
+    };
+
+    const buf = struct.encode(obj);
+    const dv = new DataView(buf);
+    console.log(dv);
+
+    assert.strictEqual(dv.getBigUint64(0, true), a, `Member 'a' is ${a}`);
+  });
+
+  // BigUint64
+  it("BigUint64 encode, number with Number type", () => {
+    const struct = qs`
+      struct {
+        u64 a;
+      }
+    `;
+
+    const a = Number.MAX_SAFE_INTEGER - 1;
     const obj = {
       a,
     };
@@ -57,7 +77,11 @@ describe("Encode testcases", () => {
     const dv = new DataView(buf);
 
     obj.a.forEach((val, i) => {
-      assert.strictEqual(dv.getUint8(i), val, `Array[${i}] is not equal ${val}`);
+      assert.strictEqual(
+        dv.getUint8(i),
+        val,
+        `Array[${i}] is not equal ${val}`
+      );
     });
   });
 
@@ -76,7 +100,11 @@ describe("Encode testcases", () => {
     const dv = new DataView(buf);
 
     obj.a.forEach((val, i) => {
-      assert.strictEqual(dv.getUint16(i * 2, true), val, `Array[${i}] is not equal ${val}`);
+      assert.strictEqual(
+        dv.getUint16(i * 2, true),
+        val,
+        `Array[${i}] is not equal ${val}`
+      );
     });
   });
 
@@ -95,7 +123,11 @@ describe("Encode testcases", () => {
     const dv = new DataView(buf);
 
     obj.a.forEach((val, i) => {
-      assert.strictEqual(dv.getUint32(i * 4, true), val, `Array[${i}] is not equal ${val}`);
+      assert.strictEqual(
+        dv.getUint32(i * 4, true),
+        val,
+        `Array[${i}] is not equal ${val}`
+      );
     });
   });
 
@@ -115,10 +147,22 @@ describe("Encode testcases", () => {
     const buf = struct.encode(obj);
     const dv = new DataView(buf);
 
-    assert.strictEqual(buf.byteLength, size + 1, `Buffer byte length is not ${1 + size}`);
-    assert.strictEqual(dv.getUint8(0), size, `Array length is not equal ${size}`);
+    assert.strictEqual(
+      buf.byteLength,
+      size + 1,
+      `Buffer byte length is not ${1 + size}`
+    );
+    assert.strictEqual(
+      dv.getUint8(0),
+      size,
+      `Array length is not equal ${size}`
+    );
     testArray.forEach((v, i) => {
-      assert.strictEqual(dv.getUint8(1 + i), v, `Array[${i}] is not equal ${v}`);
+      assert.strictEqual(
+        dv.getUint8(1 + i),
+        v,
+        `Array[${i}] is not equal ${v}`
+      );
     });
   });
 
