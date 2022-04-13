@@ -29,9 +29,7 @@ import { TYPE_TO_CODE } from "./types_map";
 /*            Type declare            */
 /* ---------------------------------- */
 
-export type StructBlocks = Array<
-  [structName: string, fieldNames: string[], fields: FieldRecordArray]
->;
+export type StructBlocks = Array<[structName: string, fieldNames: string[], fields: FieldRecordArray]>;
 
 export interface StructRawBlockItem {
   [0]: string; // struct name
@@ -83,9 +81,7 @@ export const findStructBlocks = (descriptor: string, fromIndex: number = 0) => {
 /**
  * Parse struct arrtibutes
  */
-export const parseStructAttribute = (
-  description: string
-): Partial<StructAttribute> => {
+export const parseStructAttribute = (description: string): Partial<StructAttribute> => {
   const regexp = /\<(\w+)(?::(?:\s*)(\S*))?\>/g;
   const attrs: Partial<StructAttribute> = {};
 
@@ -137,31 +133,38 @@ const parseStructAttrbuteItem = (key: string, val: string): any => {
  * P.S.
  * String and digital array are array, bit 2 is '1'
  */
-export const parseAttribute = (
-  typeCode: number,
-  length: undefined | string,
-  expand?: string
-) => {
-  if (length === undefined && typeCode < 20) {
-    return 0x0;
-  }
+export const parseAttribute = (typeCode: number, length: undefined | string, expand?: string) => {
+  // if (length === undefined && typeCode < 20) {
+  //   return 0x0;
+  // }
 
   if (length !== undefined) {
-    if (!length.startsWith("$")) {
-      if (typeCode < 20) {
-        return 0x2;
-      }
-      if (typeCode >= 20 && typeCode <= 22) {
-        return 0x3;
-      }
-    } else {
-      if (typeCode < 20) {
-        return 0x6;
-      }
-      if (typeCode >= 20 && typeCode <= 22) {
-        return 0x7;
-      }
-    }
+    // if (!length.startsWith("$")) {
+    //   if (typeCode < 20) {
+    //     return 0x2;
+    //   }
+    //   if (typeCode >= 20 && typeCode <= 22) {
+    //     return 0x3;
+    //   }
+    // } else {
+    //   if (typeCode < 20) {
+    //     return 0x6;
+    //   }
+    //   if (typeCode >= 20 && typeCode <= 22) {
+    //     return 0x7;
+    //   }
+    // }
+    return !length.startsWith("$")
+      ? typeCode < 20
+        ? 0x2
+        : typeCode >= 20 && typeCode <= 22
+        ? 0x3
+        : 0
+      : typeCode < 20
+      ? 0x6
+      : typeCode >= 20 && typeCode <= 22
+      ? 0x7
+      : 0;
   }
 
   return 0;
@@ -173,10 +176,7 @@ export const parseAttribute = (
  * @param names Fields name array
  * @returns
  */
-export const parseArrayLength = (
-  length: string | undefined,
-  names: string[]
-) => {
+export const parseArrayLength = (length: string | undefined, names: string[]) => {
   if (length === undefined) {
     return 0;
   } else {
@@ -215,8 +215,7 @@ export const parseArrayLength = (
  * ]
  */
 export const parseBody = (body: string) => {
-  const regexp =
-    /(u8|i8|u16|i16|u32|i32|u64|i64|f32|f64|char|uchar|string)(\w+)(?:\[(\$\w*|\d*)\])?;??/g;
+  const regexp = /(u8|i8|u16|i16|u32|i32|u64|i64|f32|f64|char|uchar|string)(\w+)(?:\[(\$\w*|\d*)\])?;??/g;
 
   const fieldNames: string[] = [];
   const fieldDetails: FieldRecordArray = [];
