@@ -1,6 +1,8 @@
 import { QStruct } from ".";
 import { CODE_TO_BYTE_SIZE, CODE_TO_DV_TYPE } from "./types_map";
 
+const BIGINT_MIN_INTEGER = BigInt(Number.MAX_SAFE_INTEGER);
+
 /**
  * Decode binary to javascript data
  * @param buffer binary data
@@ -59,9 +61,18 @@ export function decode(this: QStruct, buffer: ArrayBuffer, structName?: string) 
     }
 
     pos = offset;
+
+    // Push decoded value into result set
     this._decodeFieldDataset.push(decodedValue);
-    // this._decodeFieldDataset[idx] = decodedValue;
   }
 
   return this;
+}
+
+/**
+ * Convert BitInt number to Number number, it is smaller than MAX_SAFE_INTEGER
+ * @param num BigInt number
+ */
+function convertBigIntToNumber(num: BigInt) {
+  return num < BIGINT_MIN_INTEGER ? Number(num) : num;
 }

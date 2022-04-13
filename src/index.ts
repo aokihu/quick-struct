@@ -242,9 +242,7 @@ export class QStruct {
   };
 }
 
-Object.defineProperties(QStruct.prototype, {
-  decode: { value: decode },
-});
+QStruct.prototype.decode = decode;
 
 /**
  *

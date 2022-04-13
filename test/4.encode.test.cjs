@@ -37,7 +37,6 @@ describe("Encode testcases", () => {
 
     const buf = struct.encode(obj);
     const dv = new DataView(buf);
-    console.log(dv);
 
     assert.strictEqual(dv.getBigUint64(0, true), a, `Member 'a' is ${a}`);
   });
@@ -57,29 +56,9 @@ describe("Encode testcases", () => {
 
     const buf = struct.encode(obj);
     const dv = new DataView(buf);
-    console.log(dv);
 
     assert.strictEqual(dv.getBigUint64(0, true), BigInt(a), `Member 'a' is ${a}`);
-  });
-
-  // BigUint64, auto convert BigInt to number
-  it("BigUint64 encode, number with Number type", () => {
-    const struct = qs`
-      struct {
-        u64 a;
-      }
-    `;
-
-    const a = Number.MAX_SAFE_INTEGER - 1;
-    const obj = {
-      a,
-    };
-
-    const buf = struct.encode(obj);
-    const dv = new DataView(buf);
-    console.log(dv);
-
-    assert.strictEqual(dv.getBigUint64(0, true), BigInt(a), `Member 'a' is ${a}`);
+    assert.equal(dv.getBigUint64(0, true), a, `Member 'a' is ${a}`);
   });
 
   it("Uint8 array with fixed length", () => {
