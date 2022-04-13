@@ -62,10 +62,11 @@ export const convertToBuffer = (
   }
 
   // Only one digital
-  if (typeof value === "number") {
+  if (typeof value === "number" || typeof value === "bigint") {
     const _bufferLength = _typeSize;
     const buffer = new ArrayBuffer(_bufferLength);
     const dv = new DataView(buffer);
+
     // @ts-ignore
     dv[_gm](0, value, isLittleEndianness);
     result.buffer = buffer;
