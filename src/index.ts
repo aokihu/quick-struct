@@ -10,8 +10,7 @@
 import type { StructBlocks } from "./compile";
 import { compile, parseStructAttribute } from "./compile";
 import { decode } from "./decode";
-import { convertToBuffer } from "./encode";
-import { CODE_TO_BYTE_SIZE, CODE_TO_DV_TYPE } from "./types_map";
+import { encode } from "./encode";
 
 export class QStruct {
   /* ---------------------------------- */
@@ -32,30 +31,31 @@ export class QStruct {
 
   constructor(rawString?: string) {
     if (rawString !== undefined) {
-      // Store and compile struct layout string
+      /* ---- Store and compile struct ---- */
+
       this._rawString = rawString;
       this._structs = compile(rawString);
 
-      /* ---------------------------------- */
-      /*           Set field names          */
-      /* ---------------------------------- */
+      /* --------- Set field names -------- */
+
       this._fieldNames = this.findStruct()![1]; // 'default' struct
 
       /* ---------------------------------- */
       /*          Struct Attributes         */
       /* ---------------------------------- */
+
       const attrs = parseStructAttribute(this._rawString);
 
-      // Set auto flush property
+      /* ----- Set auto flush property ---- */
+
       this._autoFlush = attrs.autoflush ?? false;
 
-      // Set endianness property
-      if (attrs.endian) {
-        this._decodeLittleEndian = attrs.endian !== "big";
-      }
+      /* ----- Set endianness property ---- */
+
+      attrs.endian && (this._decodeLittleEndian = attrs.endian !== "big");
     }
 
-    // Check endianness
+    /* -------- Check endianness -------- */
     const testByte = new Uint8Array(new Uint16Array([1]).buffer);
     this._littleEndian = testByte[0] === 1;
   }
@@ -64,7 +64,7 @@ export class QStruct {
   /*           Private methods          */
   /* ---------------------------------- */
 
-  findStruct(name: string = "default") {
+  protected findStruct(name: string = "default") {
     return this._structs.find((s) => s[0] === name);
   }
 
@@ -116,66 +116,14 @@ export class QStruct {
    * @param structName struct name
    * @returns class instance self
    */
-  decode!: (buffer: ArrayBuffer, structName?: string) => any;
+  decode: (buffer: ArrayBuffer, structName?: string) => any = decode;
 
   /**
    * Encode object to binary
    * @param obj target object
    * @param structName struct name
    */
-  encode(obj: any, structName?: string) {
-    // Little endianness
-    const isLittleEndian = this._decodeLittleEndian;
-
-    // get struct
-    const _struct = arguments.length === 1 ? this._structs[0] : this.findStruct(structName);
-    const [_, _fNames, _fDetails] = _struct!;
-
-    // Object key names
-    const _keys = Object.keys(obj);
-
-    /* Loop */
-    const tmp: any = {};
-    let totalByteLength = 0;
-
-    for (let _k of _keys) {
-      const _v = obj[_k];
-      let _fIdx = _fNames.findIndex((n) => n === _k);
-      let _fDetail = _fDetails[_fIdx];
-      const _result = Object.freeze(convertToBuffer(_k, _v, _fDetail, isLittleEndian));
-
-      // console.log(_result);
-      // store buffer to temp array
-      tmp[_k] = _result.buffer;
-
-      // add new buffer length to total buffer length
-      totalByteLength += _result.buffer.byteLength;
-
-      /* Put byte length to placeholder field */
-      let _i;
-      if ((_i = _result.placeholderIndex) !== undefined) {
-        let _name = _fNames[_i];
-        _fDetail = _fDetails[_i];
-        const _resultPlaceholder = Object.freeze(convertToBuffer(_name, _result.buffer.byteLength, _fDetail));
-
-        tmp[_name] = _resultPlaceholder.buffer;
-        totalByteLength += _resultPlaceholder.buffer.byteLength;
-      }
-    }
-
-    /* new buffer to output */
-    const output = new Uint8Array(totalByteLength);
-
-    let offset = 0;
-    for (let _k of _fNames) {
-      const _buf = tmp[_k];
-      output.set(new Uint8Array(_buf), offset);
-      offset += _buf.byteLength;
-    }
-
-    /* Return array buffer result */
-    return output.buffer;
-  }
+  encode: (obj: any, structName?: string) => ArrayBufferLike = encode;
 
   /* ---------------------------------- */
   /*             Flush cache            */
@@ -194,8 +142,7 @@ export class QStruct {
    * @param on Switch ON or OFF auto flush
    */
   autoFlush(on?: boolean) {
-    this._autoFlush = on === undefined ? true : on;
-
+    this._autoFlush = on ?? true;
     return this;
   }
 
@@ -215,9 +162,7 @@ export class QStruct {
     );
 
     // auto flush decoded cache
-    if (this._autoFlush) {
-      this.flush();
-    }
+    this._autoFlush && this.flush();
     return result;
   };
 
@@ -242,13 +187,12 @@ export class QStruct {
   };
 }
 
-QStruct.prototype.decode = decode;
+// QStruct.prototype.decode = decode;
+// QStruct.prototype.encode = encode;
 
 /**
- *
  * Template string function
  * reuten instance of JSCtruct
- *
  */
 export function qs(sds: TemplateStringsArray) {
   return new QStruct(sds.raw[0]);

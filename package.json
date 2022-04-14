@@ -1,6 +1,6 @@
 {
   "name": "quick-struct",
-  "version": "0.4.11",
+  "version": "0.4.12",
   "main": "./build/index.js",
   "types": "./types/index.d.ts",
   "author": "aokihu <aokihu@gmail.com>",
@@ -37,7 +37,7 @@
     "prepublish": "yarn clean && yarn build && npx tsc --emitDeclarationOnly --outDir build",
     "prepack": "rm -rf build && yarn build",
     "build": "node esbuild.js",
-    "pretest": "npx tsc && npx esbuild src/index.ts --sourcemap --bundle --platform=node --target=node16 --outfile=build/index.js",
+    "pretest": "npx tsc && npx esbuild src/index.ts --bundle --platform=node --target=node16 --outfile=build/index.js",
     "test": "npx mocha",
     "bench": "yarn build && node benchmark/index.mjs",
     "clean": "rm -rf build"

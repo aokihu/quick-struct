@@ -265,4 +265,34 @@ describe("Encode testcases", () => {
     assert.strictEqual(dv.getUint8(13), 0, "Byte[13] is 0");
     assert.strictEqual(dv.getUint8(14), 9, "Byte[14] is 9");
   });
+
+  it("Complex struct encode, have BigInt64 type", () => {
+    const struct = qs`
+      <autoflush>
+      <endian:little>
+      struct {
+        u8 head;
+        u32 groupToken;
+        u32 deviceToken;
+        u64 timestamp;
+        u64 responseId;
+        u16 action;
+        u8 payloadType;
+        u32 payloadFlags;
+      }
+    `;
+
+    const field = {
+      head: 0xc2,
+      groupToken: 0,
+      deviceToken: 0,
+      timestamp: Date.now(),
+      responseId: 1,
+      action: 0,
+      payloadType: 0,
+      payloadFlags: 0,
+    };
+
+    const buf = struct.encode(field);
+  });
 });
