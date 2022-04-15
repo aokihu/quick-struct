@@ -85,47 +85,6 @@ export const CODE_TO_DV_TYPE = [
   "Uint8",
 ];
 
-export interface ICODE_TO_TYPEVIEW {
-  [idx: number]:
-    | number
-    | Uint8ArrayConstructor
-    | Int8ArrayConstructor
-    | Uint16ArrayConstructor
-    | Int16ArrayConstructor
-    | Uint32ArrayConstructor
-    | Int32ArrayConstructor
-    | BigUint64ArrayConstructor
-    | BigInt64ArrayConstructor
-    | Float32ArrayConstructor
-    | Float64ArrayConstructor;
-}
-
-export const CODE_TO_TYPEVIEW: ICODE_TO_TYPEVIEW = [
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  Uint8Array,
-  Int8Array,
-  Uint16Array,
-  Int16Array,
-  Uint32Array,
-  Int32Array,
-  BigUint64Array,
-  BigInt64Array,
-  Float32Array,
-  Float64Array,
-  Uint8Array,
-  Uint8Array,
-  Uint8Array,
-];
-
 export interface ICODE_TO_BYTE_SIZE {
   [idx: number]: number;
 }

@@ -1,6 +1,6 @@
 {
   "name": "quick-struct",
-  "version": "0.4.12",
+  "version": "1.0.0",
   "main": "./build/index.js",
   "types": "./types/index.d.ts",
   "author": "aokihu <aokihu@gmail.com>",
@@ -14,7 +14,7 @@
     "arraybuffer",
     "buffer",
     "struct",
-    "structer",
+    "structor",
     "c",
     "rust",
     "encode",
