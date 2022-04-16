@@ -2,7 +2,7 @@
  * JS-CStruct library
  *
  * @file types.ts
- * @version 0.0.1
+ * @version 1.0.1
  * @author aokihu <aokihu@gmail.com>
  * @license MIT
  * @copyright (c) 2022 aokihu
