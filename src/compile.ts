@@ -29,7 +29,9 @@ import { TYPE_TO_CODE } from "./types_map";
 /*            Type declare            */
 /* ---------------------------------- */
 
-export type StructBlocks = Array<[structName: string, fieldNames: string[], fields: FieldRecordArray]>;
+export type StructBlocks = Array<
+  [structName: string, fieldNames: string[], fields: FieldRecordArray]
+>;
 
 export interface StructRawBlockItem {
   [0]: string; // struct name
@@ -134,33 +136,16 @@ const parseStructAttrbuteItem = (key: string, val: string): any => {
  * String and digital array are array, bit 2 is '1'
  */
 export const parseAttribute = (typeCode: number, length: undefined | string, expand?: string) => {
-  // if (length === undefined && typeCode < 20) {
-  //   return 0x0;
-  // }
-
-  if (length !== undefined) {
-    // if (!length.startsWith("$")) {
-    //   if (typeCode < 20) {
-    //     return 0x2;
-    //   }
-    //   if (typeCode >= 20 && typeCode <= 22) {
-    //     return 0x3;
-    //   }
-    // } else {
-    //   if (typeCode < 20) {
-    //     return 0x6;
-    //   }
-    //   if (typeCode >= 20 && typeCode <= 22) {
-    //     return 0x7;
-    //   }
-    // }
+  if (length) {
     return !length.startsWith("$")
-      ? typeCode < 20
+      ? /* Not variable length field */
+        typeCode < 20
         ? 0x2
         : typeCode >= 20 && typeCode <= 22
         ? 0x3
         : 0
-      : typeCode < 20
+      : /* Variable length field */
+      typeCode < 20
       ? 0x6
       : typeCode >= 20 && typeCode <= 22
       ? 0x7
@@ -215,7 +200,8 @@ export const parseArrayLength = (length: string | undefined, names: string[]) =>
  * ]
  */
 export const parseBody = (body: string) => {
-  const regexp = /(u8|i8|u16|i16|u32|i32|u64|i64|f32|f64|char|uchar|string)(\w+)(?:\[(\$\w*|\d*)\])?;??/g;
+  const regexp =
+    /(u8|i8|u16|i16|u32|i32|u64|i64|f32|f64|char|uchar|string)(\w+)(?:\[(\$\w*|\d*)\])?;??/g;
 
   const fieldNames: string[] = [];
   const fieldDetails: FieldRecordArray = [];
