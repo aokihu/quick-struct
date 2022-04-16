@@ -22,6 +22,7 @@ export function decode(this: QStruct, buffer: ArrayBuffer, structName?: string) 
   let typeSize = 0;
   let decodedValue: any;
   const isLittleEndian = this._decodeLittleEndian;
+  const isEndianConsistent = this._decodeLittleEndian === this._littleEndian;
 
   /* Loop */
   const tIdx = fields.length;
