@@ -201,7 +201,7 @@ export const parseArrayLength = (length: string | undefined, names: string[]) =>
  */
 export const parseBody = (body: string) => {
   const regexp =
-    /(u8|i8|u16|i16|u32|i32|u64|i64|f32|f64|char|uchar|string)(\w+)(?:\[(\$\w*|\d*)\])?;??/g;
+    /(raw|u8|i8|u16|i16|u32|i32|u64|i64|f32|f64|char|uchar|string)(\w+)(?:\[(\$\w*|\d*)\])?;??/g;
 
   const fieldNames: string[] = [];
   const fieldDetails: FieldRecordArray = [];
