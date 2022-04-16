@@ -264,9 +264,9 @@ describe("QStruct class test", () => {
                 struct {
                     u8 index;
                     u8 phone_size;
-                    char phone[$phone_size]
+                    uchar phone[$phone_size]
                     u8 address_size;
-                    char address[$address_size];
+                    string address[$address_size];
                 }
             `;
 
