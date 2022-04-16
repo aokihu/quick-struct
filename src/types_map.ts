@@ -12,6 +12,7 @@ export interface ITYPE_TO_CODE {
   [idx: string]: number;
 }
 export const TYPE_TO_CODE: ITYPE_TO_CODE = {
+  raw: 9,
   u8: 10,
   i8: 11,
   u16: 12,
@@ -42,7 +43,7 @@ export const CODE_TO_TYPE: ICODE_TO_TYPE = [
   "",
   "",
   "",
-  "",
+  "raw",
   "u8",
   "i8",
   "u16",
@@ -69,7 +70,7 @@ export const CODE_TO_DV_TYPE = [
   "",
   "",
   "",
-  "",
+  "Uint8",
   "Uint8",
   "Int8",
   "Uint16",
@@ -90,5 +91,5 @@ export interface ICODE_TO_BYTE_SIZE {
 }
 
 export const CODE_TO_BYTE_SIZE: ICODE_TO_BYTE_SIZE = [
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 4, 4, 8, 8, 4, 8, 1, 1, 1,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 4, 4, 8, 8, 4, 8, 1, 1, 1,
 ];
