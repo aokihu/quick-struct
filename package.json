@@ -1,6 +1,6 @@
 {
   "name": "quick-struct",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "main": "./build/index.js",
   "types": "./types/index.d.ts",
   "author": "aokihu <aokihu@gmail.com>",
