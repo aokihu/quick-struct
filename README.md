@@ -58,7 +58,7 @@ const struct = qs`
 `;
 
 // Create a UInt8 array
-const buffer = new UInt8Array([12]);
+const buffer = new Uint8Array([12]);
 
 // Decode buffer
 const result = struct.decode(buffer).toJson();
@@ -81,7 +81,7 @@ const structDescriptor = `
 const struct = new QStruct(structDescriptor);
 
 // Create a UInt8 array
-const buffer = new UInt8Array([12]);
+const buffer = new Uint8Array([12]);
 
 // Decode buffer
 const result = struct.decode(buffer).toJson();
@@ -106,7 +106,7 @@ const struct = qs`
 `;
 
 // Create a UInt8 array
-const buffer = new UInt8Array([12, 16, 32]);
+const buffer = new Uint8Array([12, 16, 32]);
 
 // Decode buffer
 const result = struct.decode(buffer).toJson();
@@ -135,7 +135,7 @@ const struct = qs`
 
 // Create a UInt8 array
 const text = new TextEncoder().encode("hello");
-const buffer = new UInt8Array([12, 13, 14, ...text]);
+const buffer = new Uint8Array([12, 13, 14, ...text]);
 
 // Decode buffer
 const result = struct.decode(buffer).toJson();
@@ -276,7 +276,7 @@ const struct = qs`
 
 // Create a UInt8 array
 const text = new TextEncoder().encode("hello");
-const buffer = new UInt8Array([12, 13, 14, ...text]);
+const buffer = new Uint8Array([12, 13, 14, ...text]);
 
 // Set little-endian mode
 const result = struct.setLittleEndian().decode(buffer).toJson();
@@ -366,8 +366,8 @@ const struct = qs`
 
 /* -------------------------------- */
 
-// Create the first UInt8 array
-const buffer = new UInt8Array([12]);
+// Create the first Uint8 array
+const buffer = new Uint8Array([12]);
 
 // Decode buffer
 const result = struct.decode(buffer).toJson();
