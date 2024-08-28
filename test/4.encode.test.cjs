@@ -6,6 +6,8 @@ function randomSize() {
 }
 
 describe("Encode testcases", () => {
+
+  // Uint8
   it("Uint8 encode", () => {
     const struct = qs`
             struct {
@@ -21,6 +23,24 @@ describe("Encode testcases", () => {
 
     assert.strictEqual(dv.getUint8(0), 128, "Member 'a' is equal 128");
   });
+
+  // Int8
+  it("Int8 encode", () => {
+    const struct = qs`
+            struct {
+                i8 a;
+            }
+        `;
+    const obj = {
+      a: -64,
+    };
+
+    const buf = struct.encode(obj);
+    const dv = new DataView(buf);
+
+    assert.strictEqual(dv.getInt8(0), -64, "Member 'a' is equal -64");
+  });
+
 
   // BigUint64
   it("BigUint64 encode, number with BigInt64 type", () => {
