@@ -35,6 +35,62 @@ describe("Decode testcases", () => {
   }
   );
 
+  // Uint16
+  it('Uint16 decode', () => {
+    const struct = qs`
+      struct {
+        u16 a;
+      }
+    `;
+
+    const buffer = new Uint16Array([0xFF06]).buffer;
+    const result = struct.decode(buffer).toJSON();
+    assert.strictEqual(result.a, 0xFF06, 'a is not 0xFF06');
+  }
+  );
+
+  // Int16
+  it('Int16 decode', () => {
+    const struct = qs`
+      struct {
+        i16 a;
+      }
+    `;
+
+    const buffer = new Uint16Array([0xFF06]).buffer;
+    const result = struct.decode(buffer).toJSON();
+    assert.strictEqual(result.a, -250, 'a is not -250');
+  }
+  );
+
+  // UIn16 to Int16
+  it('Uint16 to Int16 decode', () => {
+    const struct = qs`
+      struct {
+        i16 a;
+      }
+    `;
+
+    const buffer = new Uint16Array([0xFF06]).buffer;
+    const result = struct.decode(buffer).toJSON();
+    assert.strictEqual(result.a, -250, 'a is not -250');
+  }
+  );
+
+  // Int16 to Uint16
+  it('Int16 to Uint16 decode', () => {
+    const struct = qs`
+      struct {
+        u16 a;
+      }
+    `;
+
+    const buffer = new Int16Array([-250]).buffer;
+    const result = struct.decode(buffer).toJSON();
+    assert.strictEqual(result.a, 0xFF06, 'a is not 0xFF06');
+  }
+  );
+
 
   // BigUint64
   it('BigUint64 decode', () => {
